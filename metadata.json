@@ -1,0 +1,7 @@
+{
+  "name": "TimeGuess",
+  "description": "Cinematic historical photo year guessing game. Guess the year across five rounds of history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
