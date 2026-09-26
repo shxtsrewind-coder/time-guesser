@@ -5,9 +5,15 @@ import { FinalResultsScreen } from '../components/FinalResultsScreen.tsx';
 
 interface FinalResultsPageProps {
   onOpenRemoveAds?: () => void;
+  isAnonymous?: boolean;
+  onOpenSaveProgress?: () => void;
 }
 
-export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({ onOpenRemoveAds }) => {
+export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
+  onOpenRemoveAds,
+  isAnonymous,
+  onOpenSaveProgress,
+}) => {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
 
@@ -103,6 +109,8 @@ export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({ onOpenRemove
         onPlayAgain={handlePlayAgain}
         onOpenLeaderboard={handleOpenLeaderboard}
         onOpenRemoveAds={onOpenRemoveAds}
+        isAnonymous={isAnonymous}
+        onOpenSaveProgress={onOpenSaveProgress}
       />
     </div>
   );

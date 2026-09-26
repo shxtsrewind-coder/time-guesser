@@ -19,14 +19,16 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
   onProfileSaved,
 }) => {
   const [displayName, setDisplayName] = useState(currentDisplayName || 'Historian');
-  const [selectedCountry, setSelectedCountry] = useState(() => getUserCountry().code);
+  const [selectedCountry, setSelectedCountry] = useState(() => getUserCountry()?.code || 'US');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const currentCountryObj =
-    POPULAR_COUNTRIES.find((c) => c.code === selectedCountry) || getUserCountry();
+    POPULAR_COUNTRIES.find((c) => c.code === selectedCountry) ||
+    getUserCountry() ||
+    { code: 'US', name: 'United States', flag: '🇺🇸' };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -50,7 +52,6 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
           .from('profiles')
           .update({
             display_name: trimmed,
-            updated_at: new Date().toISOString(),
           })
           .eq('id', userId);
       }

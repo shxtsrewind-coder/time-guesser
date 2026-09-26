@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, User, Flame } from 'lucide-react';
+import { Trophy, User, Flame, Sparkles } from 'lucide-react';
 import { GameMode } from '../types.ts';
 import { getUserCountry } from '../lib/countryFlags.ts';
 import { getStreakData, isDailyCompletedToday, StreakData } from '../lib/streak.ts';
@@ -10,10 +10,12 @@ interface HeaderProps {
   currentRound?: number;
   totalScore?: number;
   displayName: string;
+  isAnonymous?: boolean;
   onOpenProfile: () => void;
   onGoHome: () => void;
   onOpenLeaderboard: () => void;
   onOpenRemoveAds?: () => void;
+  onOpenSaveProgress?: () => void;
   isPlaying?: boolean;
 }
 
@@ -22,9 +24,11 @@ export const Header: React.FC<HeaderProps> = ({
   currentRound,
   totalScore,
   displayName,
+  isAnonymous,
   onOpenProfile,
   onGoHome,
   onOpenLeaderboard,
+  onOpenSaveProgress,
   isPlaying,
 }) => {
   const [userCountry, setUserCountryState] = useState(getUserCountry);
@@ -119,14 +123,31 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
+          {/* Guest Mode Trigger Button */}
+          {isAnonymous && onOpenSaveProgress && (
+            <button
+              type="button"
+              onClick={onOpenSaveProgress}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-850 border border-amber-600/40 hover:border-amber-500 text-amber-300 text-xs font-semibold shadow-sm transition-all cursor-pointer active:scale-95 shrink-0"
+              title="How do you want to play?"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="whitespace-nowrap">Guest Mode</span>
+            </button>
+          )}
+
           {/* Player Profile */}
           <button
             type="button"
             onClick={onOpenProfile}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-stone-900/70 hover:bg-stone-800 border border-stone-800 hover:border-stone-700 text-stone-300 text-xs font-medium transition-colors cursor-pointer max-w-[130px] sm:max-w-[150px]"
-            title={`Player Profile (${userCountry.name})`}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-stone-900/70 hover:bg-stone-850 border border-stone-800 hover:border-stone-700 text-stone-300 text-xs font-medium transition-colors cursor-pointer max-w-[130px] sm:max-w-[150px]"
+            title={`Player Profile${userCountry ? ` (${userCountry.name})` : ''}`}
           >
-            <span className="text-xs shrink-0 select-none" title={userCountry.name}>{userCountry.flag}</span>
+            {userCountry?.flag && (
+              <span className="text-xs shrink-0 select-none" title={userCountry.name}>
+                {userCountry.flag}
+              </span>
+            )}
             <span className="truncate whitespace-nowrap">{displayName || 'Player'}</span>
           </button>
         </div>

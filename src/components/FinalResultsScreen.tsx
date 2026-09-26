@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles } from 'lucide-react';
+import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play } from 'lucide-react';
 import { FinishGameResponse, GameMode } from '../types.ts';
 import { ArchivalAdBanner } from './ArchivalAdBanner.tsx';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
@@ -11,6 +11,8 @@ interface FinalResultsScreenProps {
   onPlayAgain: () => void;
   onOpenLeaderboard: () => void;
   onOpenRemoveAds?: () => void;
+  isAnonymous?: boolean;
+  onOpenSaveProgress?: () => void;
 }
 
 export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
@@ -19,6 +21,8 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
   onPlayAgain,
   onOpenLeaderboard,
   onOpenRemoveAds,
+  isAnonymous,
+  onOpenSaveProgress,
 }) => {
   const [copied, setCopied] = useState(false);
   const isAdFree = getLocalAdFreeStatus();
@@ -81,7 +85,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         {/* Header Title */}
         <div className="text-center space-y-2 pt-2">
           <p className="text-xs uppercase tracking-widest text-amber-500 font-mono font-medium">
-            {mode === 'daily' ? 'Daily Challenge Complete' : 'Classic Expedition Complete'}
+            Daily Challenge Complete
           </p>
           <h1 className="text-3xl sm:text-4xl font-extrabold font-cinzel text-stone-100">
             {badge.title}
@@ -94,7 +98,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="text-xs font-semibold uppercase tracking-widest text-stone-400 font-mono">
-            Final Expedition Score
+            Final Score
           </div>
 
           <div className="py-2">
@@ -210,6 +214,26 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
 
       {/* Footer Action Buttons */}
       <div className="space-y-2.5 pt-2">
+        {/* Choice Banner for Guests */}
+        {isAnonymous && onOpenSaveProgress && (
+          <div className="bg-gradient-to-r from-amber-950/40 via-stone-900 to-amber-950/40 border border-amber-600/40 rounded-2xl p-4 sm:p-5 text-center space-y-2.5 shadow-lg">
+            <div className="flex items-center justify-center gap-1.5 text-amber-400 text-xs font-semibold uppercase font-mono tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Playing as Guest</span>
+            </div>
+            <p className="text-xs text-stone-300 max-w-sm mx-auto leading-relaxed">
+              Your scores stay on this device only. Create a free account anytime to compete on the global leaderboard.
+            </p>
+            <button
+              type="button"
+              onClick={onOpenSaveProgress}
+              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-stone-950 font-bold text-xs inline-flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer active:scale-95"
+            >
+              <span>How do you want to play?</span>
+            </button>
+          </div>
+        )}
+
         <button
           type="button"
           onClick={handleShare}
@@ -228,35 +252,81 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
           )}
         </button>
 
-        <div className="grid grid-cols-2 gap-2.5">
-          <button
-            type="button"
-            onClick={onPlayAgain}
-            className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
-          >
-            <div className="flex items-center gap-1.5 text-amber-400">
-              <RotateCcw className="w-4 h-4" />
-              <span className="font-bold text-stone-100">Play Again</span>
+        {mode === 'daily' ? (
+          <div className="space-y-3">
+            {/* Daily challenge completed reminder */}
+            <div className="bg-[#141210] border border-amber-850/60 rounded-2xl p-4 text-center space-y-1 shadow-inner">
+              <div className="flex items-center justify-center gap-2 text-amber-300 font-semibold text-xs sm:text-sm">
+                <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Come back tomorrow for a new Daily Challenge!</span>
+              </div>
+              <p className="text-[11px] text-stone-400 font-mono">
+                Daily puzzles reset at midnight UTC · Check standings on the leaderboard
+              </p>
             </div>
-            <span className="text-[10px] text-stone-400 font-normal">
-              {mode === 'daily' ? 'Classic Expedition' : 'New Expedition'}
-            </span>
-          </button>
 
-          <button
-            type="button"
-            onClick={onOpenLeaderboard}
-            className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
-          >
-            <div className="flex items-center gap-1.5 text-amber-400">
-              <Trophy className="w-4 h-4" />
-              <span className="font-bold text-stone-100">Leaderboard</span>
+            {/* Action buttons: Play Classic instead + Leaderboard */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={onPlayAgain}
+                className="py-3 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-md"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Play className="w-4 h-4 fill-stone-950" />
+                  <span className="font-bold">Play Classic instead</span>
+                </div>
+                <span className="text-[10px] text-stone-900/80 font-normal">
+                  Unlimited rounds
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenLeaderboard}
+                className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+              >
+                <div className="flex items-center gap-1.5 text-amber-400">
+                  <Trophy className="w-4 h-4" />
+                  <span className="font-bold text-stone-100">Leaderboard</span>
+                </div>
+                <span className="text-[10px] text-stone-400 font-normal">
+                  Daily Standings
+                </span>
+              </button>
             </div>
-            <span className="text-[10px] text-stone-400 font-normal">
-              {mode === 'daily' ? 'Daily Standings' : 'Hall of Fame'}
-            </span>
-          </button>
-        </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={onPlayAgain}
+              className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+            >
+              <div className="flex items-center gap-1.5 text-amber-400">
+                <RotateCcw className="w-4 h-4" />
+                <span className="font-bold text-stone-100">Play Again</span>
+              </div>
+              <span className="text-[10px] text-stone-400 font-normal">
+                New Expedition
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenLeaderboard}
+              className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+            >
+              <div className="flex items-center gap-1.5 text-amber-400">
+                <Trophy className="w-4 h-4" />
+                <span className="font-bold text-stone-100">Leaderboard</span>
+              </div>
+              <span className="text-[10px] text-stone-400 font-normal">
+                Hall of Fame
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

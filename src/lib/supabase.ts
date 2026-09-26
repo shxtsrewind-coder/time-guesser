@@ -1,9 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-export const SUPABASE_URL = "https://pfxmswdwosimghjaggsk.supabase.co";
-export const SUPABASE_KEY = "sb_publishable_J1IBEEAqyhz76BYFb1dimw_3AVmfL2J";
+export const SUPABASE_URL =
+  (import.meta.env.VITE_SUPABASE_URL as string) || "https://pfxmswdwosimghjaggsk.supabase.co";
+export const SUPABASE_KEY =
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "sb_publishable_J1IBEEAqyhz76BYFb1dimw_3AVmfL2J";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+export function imageUrl(path?: string | null): string {
+  if (!path) return '';
+  const trimmed = path.trim();
+  if (!trimmed) return '';
+  return trimmed.startsWith('https://') || trimmed.startsWith('http://')
+    ? trimmed
+    : `${SUPABASE_URL}/storage/v1/object/public/photos/${trimmed}`;
+}
 
 export interface ApiErrorPayload {
   error?: string;

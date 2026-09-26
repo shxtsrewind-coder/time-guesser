@@ -174,6 +174,18 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setGameError(null);
 
       try {
+        // Ensure user has at least an anonymous session before calling start-game function
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (!sessionData?.session) {
+          const { error: anonError } = await supabase.auth.signInAnonymously();
+          if (anonError) {
+            console.warn('Anonymous sign in on play error:', anonError);
+            setGameError('Could not start game. Please check your internet connection and try again.');
+            setIsLoadingGame(false);
+            return null;
+          }
+        }
+
         const { data, error } = await supabase.functions.invoke('start-game', {
           body: { mode },
         });

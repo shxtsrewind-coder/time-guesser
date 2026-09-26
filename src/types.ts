@@ -64,12 +64,14 @@ export interface DailyLeaderboardRow {
   rank: number;
   display_name: string;
   total_score: number;
+  country_code?: string | null;
 }
 
 export interface AllTimeLeaderboardRow {
   rank: number;
   display_name: string;
   best_score: number;
+  country_code?: string | null;
 }
 
 export type ScreenState = 

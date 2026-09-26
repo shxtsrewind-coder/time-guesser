@@ -15,7 +15,7 @@ import {
 import { supabase, parseSupabaseError } from '../lib/supabase.ts';
 import { DailyLeaderboardRow, AllTimeLeaderboardRow } from '../types.ts';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
-import { getUserCountry, getCountryForUser, CountryInfo } from '../lib/countryFlags.ts';
+import { getUserCountryCode, codeToFlagEmoji } from '../lib/countryFlags.ts';
 
 interface LeaderboardScreenProps {
   onBack: () => void;
@@ -29,7 +29,8 @@ interface RankedEntry {
   rank: number;
   displayName: string;
   score: number;
-  country: CountryInfo;
+  countryCode?: string | null;
+  flagEmoji: string | null;
 }
 
 export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
@@ -44,13 +45,13 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userCountry, setUserCountryState] = useState<CountryInfo>(getUserCountry);
+  const [userCountryCode, setUserCountryCodeState] = useState<string | null>(getUserCountryCode);
   const isAdFree = getLocalAdFreeStatus();
 
   // Listen for country changes
   useEffect(() => {
     const handleCountryChange = () => {
-      setUserCountryState(getUserCountry());
+      setUserCountryCodeState(getUserCountryCode());
     };
     window.addEventListener('timeguess_country_changed', handleCountryChange);
     return () => {
@@ -85,11 +86,12 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   }, [activeTab]);
 
   const currentList: RankedEntry[] = useMemo(() => {
-    const resolveCountry = (name: string, explicitCode?: string) => {
+    const resolveFlag = (name: string, explicitCode?: string | null): string | null => {
       if (currentDisplayName && name.toLowerCase() === currentDisplayName.toLowerCase()) {
-        return userCountry;
+        const code = userCountryCode || explicitCode;
+        return codeToFlagEmoji(code);
       }
-      return getCountryForUser(name, explicitCode);
+      return codeToFlagEmoji(explicitCode);
     };
 
     if (activeTab === 'daily') {
@@ -97,17 +99,19 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         rank: row.rank || idx + 1,
         displayName: row.display_name || 'Anonymous Chrononaut',
         score: row.total_score,
-        country: resolveCountry(row.display_name || 'Anonymous Chrononaut', (row as any).country_code || (row as any).country),
+        countryCode: row.country_code || (row as any).country || null,
+        flagEmoji: resolveFlag(row.display_name, row.country_code || (row as any).country),
       }));
     } else {
       return allTimeScores.map((row, idx) => ({
         rank: row.rank || idx + 1,
         displayName: row.display_name || 'Anonymous Chrononaut',
         score: row.best_score,
-        country: resolveCountry(row.display_name || 'Anonymous Chrononaut', (row as any).country_code || (row as any).country),
+        countryCode: row.country_code || (row as any).country || null,
+        flagEmoji: resolveFlag(row.display_name, row.country_code || (row as any).country),
       }));
     }
-  }, [activeTab, dailyScores, allTimeScores, currentDisplayName, userCountry]);
+  }, [activeTab, dailyScores, allTimeScores, currentDisplayName, userCountryCode]);
 
   const filteredList = useMemo(() => {
     if (!searchQuery.trim()) return currentList;
@@ -116,7 +120,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
       (item) =>
         item.displayName.toLowerCase().includes(q) ||
         item.rank.toString() === q ||
-        item.country.name.toLowerCase().includes(q)
+        (item.countryCode && item.countryCode.toLowerCase().includes(q))
     );
   }, [currentList, searchQuery]);
 
@@ -134,6 +138,8 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
       (i) => i.displayName.toLowerCase() === currentDisplayName.toLowerCase()
     );
   }, [currentList, currentDisplayName]);
+
+  const currentPlayerFlag = codeToFlagEmoji(userCountryCode);
 
   const renderRankBadge = (rank: number) => {
     if (rank === 1) {
@@ -299,9 +305,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                             Champion #1
                           </span>
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <span className="text-base select-none shrink-0" title={topThree.first.country.name}>
-                              {topThree.first.country.flag}
-                            </span>
+                            {topThree.first.flagEmoji && (
+                              <span className="text-base select-none shrink-0">
+                                {topThree.first.flagEmoji}
+                              </span>
+                            )}
                             <span className="text-sm font-bold text-stone-100 truncate block">
                               {topThree.first.displayName}
                             </span>
@@ -330,9 +338,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                           Runner Up
                         </span>
                         <div className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-sm select-none shrink-0" title={topThree.second.country.name}>
-                            {topThree.second.country.flag}
-                          </span>
+                          {topThree.second.flagEmoji && (
+                            <span className="text-sm select-none shrink-0">
+                              {topThree.second.flagEmoji}
+                            </span>
+                          )}
                           <span className="text-xs font-semibold text-stone-200 truncate block">
                             {topThree.second.displayName}
                           </span>
@@ -360,9 +370,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                           Third Place
                         </span>
                         <div className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-sm select-none shrink-0" title={topThree.third.country.name}>
-                            {topThree.third.country.flag}
-                          </span>
+                          {topThree.third.flagEmoji && (
+                            <span className="text-sm select-none shrink-0">
+                              {topThree.third.flagEmoji}
+                            </span>
+                          )}
                           <span className="text-xs font-semibold text-stone-200 truncate block">
                             {topThree.third.displayName}
                           </span>
@@ -389,7 +401,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 <span>Your Standing</span>
               </span>
               <div className="flex items-center gap-1.5 text-stone-300 font-semibold">
-                <span className="text-sm" title={userCountry.name}>{userCountry.flag}</span>
+                {currentPlayerFlag && (
+                  <span className="text-sm select-none">{currentPlayerFlag}</span>
+                )}
                 <span>{currentDisplayName || 'Guest'}</span>
               </div>
             </div>
@@ -418,11 +432,11 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           {/* Action button */}
           <button
             type="button"
-            onClick={onStartClassic}
+            onClick={onBack}
             className="w-full py-3.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 active:scale-[0.98] text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Compass className="w-4 h-4 fill-stone-950" />
-            <span>Launch Classic Game</span>
+            <span>Play Daily Challenge</span>
           </button>
         </div>
 
@@ -436,7 +450,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search players by name, rank or country..."
+                placeholder="Search players by name or rank..."
                 className="w-full pl-9 pr-4 py-2 rounded-xl bg-stone-900/80 border border-stone-800 text-xs text-stone-200 focus:outline-none focus:border-amber-500 placeholder:text-stone-600"
               />
             </div>
@@ -493,14 +507,15 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                       <div className="flex items-center gap-2.5 min-w-0">
                         {renderRankBadge(row.rank)}
 
-                        {/* User Country Flag */}
-                        <span
-                          className="text-lg shrink-0 select-none cursor-default"
-                          title={row.country.name}
-                          aria-label={row.country.name}
-                        >
-                          {row.country.flag}
-                        </span>
+                        {/* Country Flag (shown only if country_code is present) */}
+                        {row.flagEmoji && (
+                          <span
+                            className="text-lg shrink-0 select-none cursor-default"
+                            aria-label={row.countryCode || 'Flag'}
+                          >
+                            {row.flagEmoji}
+                          </span>
+                        )}
 
                         {/* Monogram Avatar */}
                         <div className="w-7 h-7 rounded-full bg-stone-850 border border-stone-750 flex items-center justify-center text-[11px] font-bold text-stone-300 shrink-0 font-cinzel">
