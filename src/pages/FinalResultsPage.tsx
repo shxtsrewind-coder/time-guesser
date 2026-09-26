@@ -3,7 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext.tsx';
 import { FinalResultsScreen } from '../components/FinalResultsScreen.tsx';
 
-export const FinalResultsPage: React.FC = () => {
+interface FinalResultsPageProps {
+  onOpenRemoveAds?: () => void;
+}
+
+export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({ onOpenRemoveAds }) => {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
 
@@ -98,6 +102,7 @@ export const FinalResultsPage: React.FC = () => {
         finishData={effectiveFinishData}
         onPlayAgain={handlePlayAgain}
         onOpenLeaderboard={handleOpenLeaderboard}
+        onOpenRemoveAds={onOpenRemoveAds}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import { MapPin, Maximize2, Minimize2, Navigation } from 'lucide-react';
+import { Maximize2, Minimize2, Navigation, Target, RotateCcw } from 'lucide-react';
 
 interface ResultMapProps {
   guessLat: number;
@@ -12,20 +12,23 @@ interface ResultMapProps {
 
 const createPlayerPinIcon = () => {
   return L.divIcon({
-    className: 'player-guess-pin',
+    className: 'player-guess-pin-wrapper',
     html: `
-      <div style="position:relative; width:30px; height:30px; transform:translate(-50%, -100%);">
+      <div style="position:relative; width:34px; height:34px; transform:translate(-50%, -100%);">
+        <div class="map-marker-pulse"></div>
         <div style="
-          width: 30px;
-          height: 30px;
-          background: #d97706;
+          position: relative;
+          width: 34px;
+          height: 34px;
+          background: radial-gradient(circle at 35% 35%, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
           border-radius: 50% 50% 50% 0;
           transform: rotate(-45deg);
-          border: 2px solid #fef3c7;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+          border: 2px solid #fffbeb;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.7), 0 0 16px rgba(245, 158, 11, 0.6);
           display: flex;
           align-items: center;
           justify-content: center;
+          z-index: 2;
         ">
           <div style="
             width: 8px;
@@ -37,27 +40,30 @@ const createPlayerPinIcon = () => {
         </div>
       </div>
     `,
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
+    iconSize: [34, 34],
+    iconAnchor: [17, 34],
   });
 };
 
 const createActualPinIcon = () => {
   return L.divIcon({
-    className: 'actual-location-pin',
+    className: 'actual-location-pin-wrapper',
     html: `
-      <div style="position:relative; width:32px; height:32px; transform:translate(-50%, -100%);">
+      <div style="position:relative; width:36px; height:36px; transform:translate(-50%, -100%);">
+        <div class="map-marker-pulse-green"></div>
         <div style="
-          width: 32px;
-          height: 32px;
-          background: #10b981;
+          position: relative;
+          width: 36px;
+          height: 36px;
+          background: radial-gradient(circle at 35% 35%, #ecfdf5 0%, #10b981 50%, #047857 100%);
           border-radius: 50% 50% 50% 0;
           transform: rotate(-45deg);
-          border: 2px solid #d1fae5;
-          box-shadow: 0 4px 14px rgba(16,185,129,0.5);
+          border: 2px solid #ecfdf5;
+          box-shadow: 0 4px 18px rgba(0,0,0,0.7), 0 0 20px rgba(16,185,129,0.7);
           display: flex;
           align-items: center;
           justify-content: center;
+          z-index: 3;
         ">
           <div style="
             width: 10px;
@@ -69,8 +75,8 @@ const createActualPinIcon = () => {
         </div>
       </div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
   });
 };
 
@@ -85,10 +91,17 @@ export const ResultMap: React.FC<ResultMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const fitBoundsSmooth = (map: L.Map) => {
+    const bounds = L.latLngBounds([[guessLat, guessLng], [actualLat, actualLng]]);
+    map.fitBounds(bounds, {
+      padding: [50, 50],
+      maxZoom: 14,
+    });
+  };
+
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    // Destroy existing instance if any
     if (mapInstanceRef.current) {
       mapInstanceRef.current.remove();
       mapInstanceRef.current = null;
@@ -97,6 +110,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
     const map = L.map(mapContainerRef.current, {
       zoomControl: false,
       worldCopyJump: true,
+      scrollWheelZoom: false,
     });
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -116,28 +130,23 @@ export const ResultMap: React.FC<ResultMapProps> = ({
       icon: createActualPinIcon(),
       title: 'Actual Location',
     }).addTo(map);
-    actualMarker.bindPopup('<b style="color:#10b981">Actual Location</b>');
+    actualMarker.bindPopup('<b style="color:#10b981">Actual Historic Location</b>');
 
-    // Dashed line between guess and actual
-    const line = L.polyline(
+    // Dashed trajectory line between guess and actual
+    L.polyline(
       [
         [guessLat, guessLng],
         [actualLat, actualLng],
       ],
       {
         color: '#f59e0b',
-        weight: 3,
-        opacity: 0.85,
-        dashArray: '6, 8',
+        weight: 3.5,
+        opacity: 0.9,
+        dashArray: '8, 8',
       }
     ).addTo(map);
 
-    // Fit bounds
-    const bounds = L.latLngBounds([[guessLat, guessLng], [actualLat, actualLng]]);
-    map.fitBounds(bounds, {
-      padding: [45, 45],
-      maxZoom: 14,
-    });
+    fitBoundsSmooth(map);
 
     mapInstanceRef.current = map;
 
@@ -151,58 +160,72 @@ export const ResultMap: React.FC<ResultMapProps> = ({
     const timer = setTimeout(() => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
-        const bounds = L.latLngBounds([[guessLat, guessLng], [actualLat, actualLng]]);
-        mapInstanceRef.current.fitBounds(bounds, {
-          padding: [50, 50],
-          maxZoom: 14,
-        });
+        fitBoundsSmooth(mapInstanceRef.current);
       }
     }, 120);
     return () => clearTimeout(timer);
   }, [isFullscreen, guessLat, guessLng, actualLat, actualLng]);
 
+  const handleRefocus = () => {
+    if (mapInstanceRef.current) {
+      fitBoundsSmooth(mapInstanceRef.current);
+    }
+  };
+
   return (
     <div
-      className={`relative rounded-2xl overflow-hidden border border-stone-800 bg-stone-950 transition-all ${
+      className={`relative rounded-3xl overflow-hidden border border-stone-800 bg-[#12100e] transition-all shadow-xl ${
         isFullscreen
           ? 'fixed inset-0 z-50 rounded-none w-screen h-screen'
-          : 'w-full h-64'
+          : 'w-full h-[320px] sm:h-[360px] md:h-full min-h-[300px]'
       }`}
     >
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-      {/* Legend & Distance info */}
-      <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1.5 pointer-events-auto">
-        <div className="bg-stone-900/90 backdrop-blur-md border border-stone-700/80 px-3 py-1.5 rounded-xl text-xs shadow-lg space-y-1">
+      {/* Top Left: Legend and Distance badge */}
+      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-auto">
+        <div className="bg-[#0c0a09]/95 backdrop-blur-md border border-stone-800 px-3 py-2 rounded-xl text-xs shadow-xl space-y-1.5">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
-              <span className="text-stone-300 text-[11px] font-medium">Your Guess</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block shadow-sm" />
+              <span className="text-stone-300 text-[11px] font-medium">Your Pin</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shadow-sm" />
               <span className="text-stone-300 text-[11px] font-medium">Actual</span>
             </div>
           </div>
           {distanceKm !== null && (
-            <div className="text-[11px] text-amber-300 font-mono font-semibold pt-0.5 border-t border-stone-800/80 flex items-center gap-1">
-              <Navigation className="w-3 h-3 text-amber-400 rotate-45" />
-              <span>{Math.round(distanceKm).toLocaleString()} km away</span>
+            <div className="text-xs text-amber-300 font-mono font-bold pt-1 border-t border-stone-800/80 flex items-center gap-1.5">
+              <Navigation className="w-3.5 h-3.5 text-amber-400 rotate-45" />
+              <span>{Math.round(distanceKm).toLocaleString()} km separation</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Enlarge toggle */}
-      <div className="absolute bottom-2.5 right-2.5 z-10 pointer-events-auto">
+      {/* Bottom Right: Refocus and Fullscreen */}
+      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 pointer-events-auto">
+        <button
+          type="button"
+          onClick={handleRefocus}
+          title="Refit Markers"
+          aria-label="Refit markers in view"
+          className="p-2.5 rounded-xl bg-[#0c0a09]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-white shadow-lg transition-colors cursor-pointer active:scale-95"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+
         <button
           type="button"
           onClick={() => setIsFullscreen(!isFullscreen)}
-          className="p-2 rounded-xl bg-stone-900/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-amber-400 shadow-md transition-colors flex items-center gap-1 text-xs"
+          title={isFullscreen ? 'Exit Fullscreen' : 'Enlarge Map'}
+          aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enlarge Map'}
+          className="p-2.5 rounded-xl bg-[#0c0a09]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-amber-400 shadow-lg transition-colors flex items-center gap-1 text-xs cursor-pointer active:scale-95"
         >
           {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           <span className="text-[11px] font-medium hidden xs:inline">
-            {isFullscreen ? 'Close Map' : 'Enlarge'}
+            {isFullscreen ? 'Close' : 'Enlarge'}
           </span>
         </button>
       </div>

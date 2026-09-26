@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { GameMode, RoundInfo, SubmitGuessResponse, FinishGameResponse } from '../types.ts';
 import { supabase, parseSupabaseError } from '../lib/supabase.ts';
+import { recordDailyCompletion, getTodayKey } from '../lib/streak.ts';
 
 interface SerializedGame {
   gameId: string;
@@ -179,6 +180,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (error) {
           const parsed = await parseSupabaseError(error);
+          if (parsed.includes('daily_already_played')) {
+            try {
+              localStorage.setItem(`timeguess_daily_completed_${getTodayKey()}`, 'true');
+            } catch {
+              // ignore
+            }
+          }
           setGameError(parsed);
           return null;
         }
@@ -191,6 +199,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const newGameId = data.game_id;
         const newMode = data.mode || mode;
         const newRounds: RoundInfo[] = data.rounds;
+
+        if (newMode === 'daily') {
+          try {
+            localStorage.setItem('timeguess_today_daily_rounds', JSON.stringify(newRounds));
+          } catch {
+            // ignore
+          }
+        }
 
         // Preload all round photographs in background
         newRounds.forEach((r) => preloadImageUrl(r.image_url));
@@ -289,6 +305,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFinishData(finalData);
         setIsGameFinished(true);
 
+        if (gameMode === 'daily') {
+          try {
+            recordDailyCompletion(finalData.total_score, finalData.max_score);
+          } catch (e) {
+            console.warn('Failed to record daily streak', e);
+          }
+        }
+
         persistState(
           gId,
           gameMode,
@@ -320,6 +344,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setFinishData(finalData);
         setIsGameFinished(true);
+
+        if (gameMode === 'daily') {
+          try {
+            recordDailyCompletion(finalData.total_score, finalData.max_score);
+          } catch (e) {
+            console.warn('Failed to record daily streak', e);
+          }
+        }
 
         persistState(
           gId,

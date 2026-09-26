@@ -4,7 +4,11 @@ import { useGame } from '../context/GameContext.tsx';
 import { HomeScreen } from '../components/HomeScreen.tsx';
 import { GameMode } from '../types.ts';
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  onOpenRemoveAds?: () => void;
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onOpenRemoveAds }) => {
   const navigate = useNavigate();
   const { startNewGame, isLoadingGame, gameError, setGameError } = useGame();
   const [loadingMode, setLoadingMode] = useState<GameMode | null>(null);
@@ -20,7 +24,7 @@ export const HomePage: React.FC = () => {
 
     if (result) {
       navigate(`/play/${result.gameId}/round/${result.startingRound}`);
-    } else if (gameError && gameError.includes('daily_already_played')) {
+    } else if (mode === 'daily') {
       setDailyPlayedNotice(true);
     }
   };
@@ -30,6 +34,7 @@ export const HomePage: React.FC = () => {
       <HomeScreen
         onStartGame={handleStartGame}
         onOpenLeaderboard={() => navigate('/leaderboard')}
+        onOpenRemoveAds={onOpenRemoveAds}
         isLoading={isLoadingGame}
         loadingMode={loadingMode}
         errorMessage={gameError}
