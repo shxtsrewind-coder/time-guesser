@@ -11,7 +11,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const args = process.argv.slice(2);
+const portFlagIndex = args.indexOf('--port');
+const cliPort = portFlagIndex !== -1 && args[portFlagIndex + 1] ? Number(args[portFlagIndex + 1]) : null;
+const PORT = cliPort || Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
