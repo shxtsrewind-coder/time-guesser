@@ -98,11 +98,11 @@ export const RemoveAdsModal: React.FC<RemoveAdsModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-modal-backdrop"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden"
+        className="w-full max-w-sm bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="absolute top-0 right-1/2 translate-x-1/2 w-48 h-20 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />

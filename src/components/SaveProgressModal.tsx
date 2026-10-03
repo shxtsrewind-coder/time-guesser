@@ -325,10 +325,10 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-modal-backdrop"
     >
       <div
-        className="w-full max-w-lg bg-[#141210] border border-amber-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto"
+        className="w-full max-w-lg bg-[#141210] border border-amber-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button - shown only if choice was already completed in this session */}
@@ -396,7 +396,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
                 How do you want to play?
               </h2>
               <p className="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto leading-relaxed">
-                Choose how you'd like to experience TimeGuess. You can change your choice anytime.
+                Choose how you'd like to experience When &amp; Where. You can change your choice anytime.
               </p>
             </div>
 
@@ -628,7 +628,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
 
             <div className="text-center space-y-1">
               <h2 className="text-2xl font-bold font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">
-                Log In to TimeGuess
+                Log In to When &amp; Where
               </h2>
               <p className="text-xs text-stone-400">
                 Access your saved profile, high scores, and daily streak.

@@ -13,6 +13,7 @@ import { RoundGuessPage } from './pages/RoundGuessPage.tsx';
 import { RoundResultPage } from './pages/RoundResultPage.tsx';
 import { FinalResultsPage } from './pages/FinalResultsPage.tsx';
 import { LeaderboardPage } from './pages/LeaderboardPage.tsx';
+import { DecadeSortPage } from './pages/DecadeSortPage.tsx';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage.tsx';
 import { CheckoutCancelPage } from './pages/CheckoutCancelPage.tsx';
 import { AdminPage } from './pages/AdminPage.tsx';
@@ -76,6 +77,7 @@ function AppLayout() {
   if (isPlayingRound) currentScreen = 'round';
   else if (isPlayingResult) currentScreen = 'round_result';
   else if (pathname.includes('/final')) currentScreen = 'final_results';
+  else if (pathname.includes('/decade-sort')) currentScreen = 'decade_sort';
   else if (pathname.includes('/leaderboard')) currentScreen = 'leaderboard';
   else if (pathname.includes('/checkout/') || pathname.includes('/premium/')) currentScreen = 'checkout';
 
@@ -224,14 +226,14 @@ function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0c0a09] bg-vignette text-stone-100 flex flex-col font-sans selection:bg-amber-900/50 selection:text-amber-200 relative">
+    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#090d16] bg-vignette text-slate-100 flex flex-col font-sans selection:bg-amber-900/50 selection:text-amber-200 relative">
       <ScrollToTop />
 
       {/* Global Success Notification Toast */}
       {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#161412] border border-amber-500/50 text-amber-200 px-5 py-3 rounded-2xl shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md animate-fade-in pointer-events-auto">
+        <div className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] bg-[#0f172a]/95 border border-amber-500/50 text-amber-200 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md animate-fade-in pointer-events-auto">
           <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>{toastMessage}</span>
+          <span className="truncate">{toastMessage}</span>
         </div>
       )}
 
@@ -252,7 +254,7 @@ function AppLayout() {
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 flex flex-col items-center justify-start w-full">
+      <main className="flex-1 flex flex-col items-center justify-start w-full max-w-full overflow-x-hidden">
         <Routes>
           <Route
             path="/"
@@ -274,6 +276,17 @@ function AppLayout() {
                 onOpenRemoveAds={handleOpenRemoveAds}
                 isAnonymous={isAnonymous}
                 onOpenSaveProgress={() => handleOpenAuthModal('choice')}
+              />
+            }
+          />
+          <Route
+            path="/decade-sort"
+            element={
+              <DecadeSortPage
+                onOpenRemoveAds={handleOpenRemoveAds}
+                isAnonymous={isAnonymous}
+                onOpenSaveProgress={() => handleOpenAuthModal('choice')}
+                onOpenLogin={() => handleOpenAuthModal('login')}
               />
             }
           />

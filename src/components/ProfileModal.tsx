@@ -164,11 +164,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-modal-backdrop"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative max-h-[92vh] overflow-y-auto"
+        className="w-full max-w-sm bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative max-h-[92vh] overflow-y-auto animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-stone-800/80 pb-3">

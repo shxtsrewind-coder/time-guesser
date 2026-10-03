@@ -27,7 +27,7 @@ export const CheckoutCancelPage: React.FC = () => {
           className="w-full py-3.5 px-6 rounded-2xl bg-stone-900 hover:bg-stone-850 border border-stone-750 text-stone-200 font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Return to TimeGuess</span>
+          <span>Return to When &amp; Where</span>
         </button>
       </div>
     </div>

@@ -63,14 +63,9 @@ export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
     };
   }, [gameId, ensureGameLoaded, finishData, finishCurrentGame, navigate]);
 
-  const handlePlayAgain = async () => {
+  const handlePlayAgain = () => {
     clearGame();
-    const result = await startNewGame('classic');
-    if (result) {
-      navigate(`/play/${result.gameId}/round/${result.startingRound}`);
-    } else {
-      navigate('/');
-    }
+    navigate('/decade-sort');
   };
 
   const handleOpenLeaderboard = () => {

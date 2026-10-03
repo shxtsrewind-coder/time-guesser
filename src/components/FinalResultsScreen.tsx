@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play } from 'lucide-react';
+import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play, ArrowUpDown } from 'lucide-react';
 import { FinishGameResponse, GameMode } from '../types.ts';
 import { ArchivalAdBanner } from './ArchivalAdBanner.tsx';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
@@ -55,7 +55,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
   const handleShare = async () => {
     const streakPart = mode === 'daily' && streakData.currentStreak > 0 ? ` · 🔥 ${streakData.currentStreak}-Day Streak` : '';
     const rankPart = rank && players ? ` (Rank #${rank}/${players} Daily)` : '';
-    const shareText = `TimeGuess ${mode === 'daily' ? 'Daily ' : ''}${total_score.toLocaleString()}/${validMaxScore.toLocaleString()}${streakPart}${rankPart}\nPlay at ${window.location.origin}`;
+    const shareText = `When & Where ${mode === 'daily' ? 'Daily ' : ''}${total_score.toLocaleString()}/${validMaxScore.toLocaleString()}${streakPart}${rankPart}\nPlay at ${window.location.origin}`;
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
@@ -80,39 +80,39 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
   const badge = getPerformanceBadge();
 
   return (
-    <div className="w-full max-w-xl mx-auto px-4 sm:px-6 py-6 flex flex-col justify-between min-h-[calc(100vh-64px)] space-y-6 pb-12">
-      <div className="space-y-5">
+    <div className="w-full max-w-xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col justify-between min-h-[calc(100dvh-64px)] space-y-5 sm:space-y-6 pb-12">
+      <div className="space-y-4 sm:space-y-5">
         {/* Header Title */}
-        <div className="text-center space-y-2 pt-2">
+        <div className="text-center space-y-1.5 sm:space-y-2 pt-1 sm:pt-2">
           <p className="text-xs uppercase tracking-widest text-amber-500 font-mono font-medium">
             Daily Challenge Complete
           </p>
-          <h1 className="text-3xl sm:text-4xl font-extrabold font-cinzel text-stone-100">
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold font-cinzel text-slate-100">
             {badge.title}
           </h1>
-          <p className="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto">{badge.desc}</p>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto">{badge.desc}</p>
         </div>
 
         {/* Primary Score Showcase */}
-        <div className="bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden space-y-3">
+        <div className="bg-[#0b1120] border border-slate-800 rounded-3xl p-5 sm:p-8 text-center shadow-2xl relative overflow-hidden space-y-3">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="text-xs font-semibold uppercase tracking-widest text-stone-400 font-mono">
+          <div className="text-xs font-semibold uppercase tracking-widest text-slate-400 font-mono">
             Final Score
           </div>
 
-          <div className="py-2">
+          <div className="py-2 animate-score-pop">
             <span className="text-5xl sm:text-6xl font-black font-cinzel text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-300 to-amber-500 font-mono tracking-tight drop-shadow-md">
               {total_score.toLocaleString()}
             </span>
-            <span className="block text-xs sm:text-sm text-stone-400 font-medium pt-1 font-mono">
+            <span className="block text-xs sm:text-sm text-slate-400 font-medium pt-1 font-mono">
               out of {validMaxScore.toLocaleString()} points ({percentage}%)
             </span>
           </div>
 
           {/* Daily Rank if available */}
           {rank !== undefined && players !== undefined && (
-            <div className="pt-3 border-t border-stone-800/80 flex items-center justify-center gap-2 text-amber-400 text-xs sm:text-sm font-semibold">
+            <div className="pt-3 border-t border-slate-800/80 flex items-center justify-center gap-2 text-amber-400 text-xs sm:text-sm font-semibold">
               <Users className="w-4 h-4" />
               <span>
                 Ranked #{rank} among {players} players today
@@ -123,13 +123,13 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
 
         {/* Daily Streak Celebration Card */}
         {mode === 'daily' && (
-          <div className="bg-gradient-to-r from-amber-950/40 via-stone-900 to-amber-950/40 border border-amber-600/40 rounded-3xl p-5 sm:p-6 text-center shadow-xl space-y-3 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-600/40 rounded-3xl p-4 sm:p-6 text-center shadow-xl space-y-2.5 sm:space-y-3 relative overflow-hidden">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-amber-400 font-cinzel flex items-center gap-1.5">
                 <Flame className="w-4 h-4 fill-amber-400 text-amber-400 animate-pulse" />
                 Daily Streak Counted!
               </span>
-              <span className="font-mono text-stone-400 text-[11px]">
+              <span className="font-mono text-slate-400 text-[11px]">
                 Next in <strong className="text-amber-300">{countdown}</strong>
               </span>
             </div>
@@ -138,22 +138,22 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
               <div className="text-3xl sm:text-4xl font-black font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 font-mono tracking-tight">
                 {streakData.currentStreak} Day{streakData.currentStreak === 1 ? '' : 's'} Active
               </div>
-              <p className="text-xs text-stone-300 pt-1">
+              <p className="text-xs text-slate-300 pt-1">
                 You've locked in your score for today's global daily ranking!
               </p>
             </div>
 
-            <div className="pt-2 border-t border-stone-800/80 flex items-center justify-between text-[11px] text-stone-400 font-mono">
+            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
               <span>Best: <strong className="text-amber-400">{streakData.maxStreak}d</strong></span>
-              <span>Total: <strong className="text-stone-200">{streakData.totalCompleted || streakData.completedDates.length}</strong></span>
-              <span className="text-amber-400/90 font-sans font-medium">Play again in Classic mode!</span>
+              <span>Total: <strong className="text-slate-200">{streakData.totalCompleted || streakData.completedDates.length}</strong></span>
+              <span className="text-amber-400/90 font-sans font-medium hidden xs:inline">Play again in Classic mode!</span>
             </div>
           </div>
         )}
 
         {/* Round by Round Breakdown */}
-        <div className="bg-[#141210]/90 border border-stone-800 rounded-2xl p-4 sm:p-5 space-y-3">
-          <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 flex items-center justify-between font-mono">
+        <div className="bg-[#0b1120]/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center justify-between font-mono">
             <span>Round Accuracy Breakdown</span>
             <span>Points</span>
           </div>
@@ -165,17 +165,17 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
               const roundPercent = Math.min(100, Math.round((roundScore / roundMax) * 100));
 
               return (
-                <div key={item.round_no || idx} className="space-y-1.5 bg-stone-950/60 p-3 rounded-xl border border-stone-800/60">
+                <div key={item.round_no || idx} className="space-y-1.5 bg-slate-900/60 p-3 rounded-xl border border-slate-800/60">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-stone-300 font-medium">Round {item.round_no || idx + 1}</span>
-                    <span className="font-mono text-stone-200 tabular-nums font-semibold">
+                    <span className="text-slate-300 font-medium">Round {item.round_no || idx + 1}</span>
+                    <span className="font-mono text-slate-200 tabular-nums font-semibold">
                       <span className="text-amber-400">{roundScore.toLocaleString()}</span>
-                      <span className="text-stone-500"> / {roundMax.toLocaleString()} pts</span>
+                      <span className="text-slate-500"> / {roundMax.toLocaleString()} pts</span>
                     </span>
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full h-1.5 rounded-full bg-stone-900 border border-stone-800 overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-500"
                       style={{ width: `${roundPercent}%` }}
@@ -184,22 +184,22 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
 
                   {/* Sub-breakdown if available */}
                   {(item.location_score !== undefined || item.weekday_score !== undefined || item.year_score !== undefined) && (
-                    <div className="flex items-center gap-3 text-[11px] text-stone-400 pt-0.5 font-mono">
+                    <div className="flex items-center gap-3 text-[11px] text-slate-400 pt-0.5 font-mono flex-wrap">
                       {item.location_score !== undefined && item.location_score !== null && (
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-amber-500" />
+                          <MapPin className="w-3 h-3 text-cyan-400" />
                           <span>Loc: {item.location_score}</span>
                         </span>
                       )}
                       {item.year_score !== undefined && item.year_score !== null && (
                         <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-amber-500" />
+                          <Calendar className="w-3 h-3 text-amber-400" />
                           <span>Yr: {item.year_score}</span>
                         </span>
                       )}
                       {item.weekday_score !== undefined && item.weekday_score !== null && (
                         <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-amber-500" />
+                          <Clock className="w-3 h-3 text-purple-400" />
                           <span>Day: {item.weekday_score}</span>
                         </span>
                       )}
@@ -221,13 +221,13 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Playing as Guest</span>
             </div>
-            <p className="text-xs text-stone-300 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-slate-300 max-w-sm mx-auto leading-relaxed">
               Your scores stay on this device only. Create a free account anytime to compete on the global leaderboard.
             </p>
             <button
               type="button"
               onClick={onOpenSaveProgress}
-              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-stone-950 font-bold text-xs inline-flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer active:scale-95"
+              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-xs inline-flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer active:scale-95"
             >
               <span>How do you want to play?</span>
             </button>
@@ -237,16 +237,16 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         <button
           type="button"
           onClick={handleShare}
-          className="w-full py-4 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 active:scale-[0.98] text-stone-950 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {copied ? (
             <>
-              <Check className="w-4 h-4 text-stone-950" />
+              <Check className="w-4 h-4 text-slate-950" />
               <span>Score Copied to Clipboard!</span>
             </>
           ) : (
             <>
-              <Share2 className="w-4 h-4 text-stone-950" />
+              <Share2 className="w-4 h-4 text-slate-950" />
               <span>Share Score ({total_score.toLocaleString()}/{validMaxScore.toLocaleString()})</span>
             </>
           )}
@@ -255,42 +255,42 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         {mode === 'daily' ? (
           <div className="space-y-3">
             {/* Daily challenge completed reminder */}
-            <div className="bg-[#141210] border border-amber-850/60 rounded-2xl p-4 text-center space-y-1 shadow-inner">
+            <div className="bg-[#0b1120] border border-slate-850/80 rounded-2xl p-4 text-center space-y-1 shadow-inner">
               <div className="flex items-center justify-center gap-2 text-amber-300 font-semibold text-xs sm:text-sm">
                 <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Come back tomorrow for a new Daily Challenge!</span>
               </div>
-              <p className="text-[11px] text-stone-400 font-mono">
+              <p className="text-[11px] text-slate-400 font-mono">
                 Daily puzzles reset at midnight UTC · Check standings on the leaderboard
               </p>
             </div>
 
-            {/* Action buttons: Play Classic instead + Leaderboard */}
+            {/* Action buttons: Play Decade Sort + Leaderboard */}
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
                 onClick={onPlayAgain}
-                className="py-3 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-md"
+                className="py-3 px-2 sm:px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-md"
               >
                 <div className="flex items-center gap-1.5">
-                  <Play className="w-4 h-4 fill-stone-950" />
-                  <span className="font-bold">Play Classic instead</span>
+                  <ArrowUpDown className="w-4 h-4 text-slate-950" />
+                  <span className="font-bold truncate">Decade Sort</span>
                 </div>
-                <span className="text-[10px] text-stone-900/80 font-normal">
-                  Unlimited rounds
+                <span className="text-[10px] text-slate-900/80 font-normal hidden xs:inline">
+                  Timeline Sort
                 </span>
               </button>
 
               <button
                 type="button"
                 onClick={onOpenLeaderboard}
-                className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+                className="py-3 px-2 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-md"
               >
                 <div className="flex items-center gap-1.5 text-amber-400">
                   <Trophy className="w-4 h-4" />
-                  <span className="font-bold text-stone-100">Leaderboard</span>
+                  <span className="font-bold text-slate-100 truncate">Leaderboard</span>
                 </div>
-                <span className="text-[10px] text-stone-400 font-normal">
+                <span className="text-[10px] text-slate-400 font-normal hidden xs:inline">
                   Daily Standings
                 </span>
               </button>
@@ -301,13 +301,13 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
             <button
               type="button"
               onClick={onPlayAgain}
-              className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+              className="py-3 px-2 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
             >
               <div className="flex items-center gap-1.5 text-amber-400">
                 <RotateCcw className="w-4 h-4" />
-                <span className="font-bold text-stone-100">Play Again</span>
+                <span className="font-bold text-slate-100 truncate">Play Again</span>
               </div>
-              <span className="text-[10px] text-stone-400 font-normal">
+              <span className="text-[10px] text-slate-400 font-normal hidden xs:inline">
                 New Expedition
               </span>
             </button>
@@ -315,13 +315,13 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
             <button
               type="button"
               onClick={onOpenLeaderboard}
-              className="py-3 px-3 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-700/80 text-stone-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+              className="py-3 px-2 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 font-semibold text-xs transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
             >
               <div className="flex items-center gap-1.5 text-amber-400">
                 <Trophy className="w-4 h-4" />
-                <span className="font-bold text-stone-100">Leaderboard</span>
+                <span className="font-bold text-slate-100 truncate">Leaderboard</span>
               </div>
-              <span className="text-[10px] text-stone-400 font-normal">
+              <span className="text-[10px] text-slate-400 font-normal hidden xs:inline">
                 Hall of Fame
               </span>
             </button>

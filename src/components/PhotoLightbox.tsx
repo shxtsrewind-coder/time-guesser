@@ -30,16 +30,16 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
       role="dialog"
       aria-modal="true"
       aria-label="Enlarged photo view"
-      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-between p-4 animate-fade-in"
+      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-between p-4 animate-modal-backdrop"
       onClick={onClose}
     >
       {/* Top bar */}
-      <div className="w-full flex items-center justify-between z-10 max-w-xl mx-auto pt-2" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full flex items-center justify-between z-10 max-w-xl mx-auto pt-2 animate-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={toggleZoom}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-900/80 border border-stone-700 text-stone-300 text-xs hover:text-white transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 text-xs hover:text-white transition-colors cursor-pointer"
             title={scale === 1 ? "Zoom In" : "Zoom Out"}
           >
             {scale === 1 ? <ZoomIn className="w-4 h-4 text-amber-400" /> : <ZoomOut className="w-4 h-4 text-amber-400" />}
@@ -50,7 +50,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-full bg-stone-900/80 border border-stone-700 text-stone-300 hover:text-white transition-colors"
+          className="p-2 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
           aria-label="Close zoomed photo"
         >
           <X className="w-5 h-5" />
@@ -59,7 +59,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
 
       {/* Main image container */}
       <div 
-        className="flex-1 w-full max-w-3xl flex items-center justify-center overflow-auto py-2"
+        className="flex-1 w-full max-w-3xl flex items-center justify-center overflow-auto py-2 animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <img
@@ -73,7 +73,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
       </div>
 
       {/* Hint footer */}
-      <div className="text-stone-500 text-xs pb-1 tracking-wide" onClick={(e) => e.stopPropagation()}>
+      <div className="text-slate-400 text-xs pb-1 tracking-wide" onClick={(e) => e.stopPropagation()}>
         Tap photo or button to toggle zoom · Tap background or ✕ to close
       </div>
     </div>

@@ -68,21 +68,21 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       }`}
     >
       {/* Primary Score Breakdown */}
-      <div className="bg-[#141210] border border-stone-800 rounded-3xl p-5 shadow-xl text-center space-y-3 relative overflow-hidden">
-        <div className="flex items-center justify-between text-xs text-stone-400">
+      <div className="bg-[#0b1120] border border-slate-800 rounded-3xl p-5 shadow-xl text-center space-y-3 relative overflow-hidden">
+        <div className="flex items-center justify-between text-xs text-slate-400">
           <span className="font-semibold text-amber-400 font-cinzel">Round {round_no} Summary</span>
           <span className="font-mono tabular-nums">Total: {total_score.toLocaleString()} pts</span>
         </div>
 
         <div className="py-1">
-          <div className="text-4xl font-black text-amber-300 font-cinzel tracking-tight flex items-center justify-center gap-2">
+          <div className="text-4xl font-black text-amber-300 font-cinzel tracking-tight flex items-center justify-center gap-2 animate-score-pop">
             <span>+{score.toLocaleString()}</span>
-            <span className="text-xs font-sans uppercase font-bold text-amber-500/80 px-2 py-0.5 rounded-full bg-amber-950/60 border border-amber-800/40 font-mono">
+            <span className="text-xs font-sans uppercase font-bold text-amber-400 px-2 py-0.5 rounded-full bg-amber-950/60 border border-amber-800/40 font-mono">
               / {round_max?.toLocaleString() || '5,000'} pts
             </span>
           </div>
           {taken_on && (
-            <div className="text-xs text-stone-300 pt-1 flex items-center justify-center gap-1.5 font-medium">
+            <div className="text-xs text-slate-300 pt-1 flex items-center justify-center gap-1.5 font-medium">
               <Calendar className="w-3.5 h-3.5 text-amber-400" />
               <span>
                 Captured: <strong className="text-amber-200">{taken_on}</strong>
@@ -93,21 +93,21 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
         </div>
 
         {/* Three Score Lines */}
-        <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-3.5 space-y-2 text-xs text-left">
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs text-left shadow-inner">
           {hasLocation && location_score !== null && (
-            <div className="flex items-center justify-between py-1 border-b border-stone-800/60">
+            <div className="flex items-center justify-between py-1 border-b border-slate-800/80">
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-stone-300 font-medium">Location</span>
+                <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-slate-300 font-medium">Location</span>
                 {distance_km !== null && (
-                  <span className="text-[11px] text-stone-500 font-mono">
+                  <span className="text-[11px] text-slate-400 font-mono">
                     ({Math.round(distance_km).toLocaleString()} km away)
                   </span>
                 )}
               </div>
-              <div className="font-mono font-bold text-stone-100 tabular-nums">
-                <span className="text-amber-400">{location_score.toLocaleString()}</span>
-                <span className="text-stone-500"> / 5,000</span>
+              <div className="font-mono font-bold text-slate-100 tabular-nums">
+                <span className="text-cyan-400">{location_score.toLocaleString()}</span>
+                <span className="text-slate-500"> / 5,000</span>
               </div>
             </div>
           )}
@@ -115,33 +115,33 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-stone-300 font-medium">Year</span>
-              <span className="text-[11px] text-stone-500 font-mono">
+              <span className="text-slate-300 font-medium">Year</span>
+              <span className="text-[11px] text-slate-400 font-mono">
                 ({difference === 0 ? 'Exact' : `Off by ${difference} ${difference === 1 ? 'yr' : 'yrs'}`})
               </span>
             </div>
-            <div className="font-mono font-bold text-stone-100 tabular-nums">
+            <div className="font-mono font-bold text-slate-100 tabular-nums">
               <span className="text-amber-400">{(year_score ?? score).toLocaleString()}</span>
-              <span className="text-stone-500"> / 5,000</span>
+              <span className="text-slate-500"> / 5,000</span>
             </div>
           </div>
 
           {hasWeekday && weekday_score !== null && (
-            <div className="flex items-center justify-between py-1 border-t border-stone-800/60">
+            <div className="flex items-center justify-between py-1 border-t border-slate-800/80">
               <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-stone-300 font-medium">Day of Week</span>
+                <Clock className="w-3.5 h-3.5 text-purple-400" />
+                <span className="text-slate-300 font-medium">Day of Week</span>
                 {guess_weekday !== null && actual_weekday_name && (
-                  <span className="text-[11px] text-stone-500 font-mono">
+                  <span className="text-[11px] text-slate-400 font-mono">
                     ({WEEKDAY_NAMES[guess_weekday]?.slice(0, 3)} vs {actual_weekday_name.slice(0, 3)})
                   </span>
                 )}
               </div>
-              <div className="font-mono font-bold text-stone-100 tabular-nums">
-                <span className={weekday_score > 0 ? 'text-emerald-400' : 'text-stone-400'}>
+              <div className="font-mono font-bold text-slate-100 tabular-nums">
+                <span className={weekday_score > 0 ? 'text-purple-400' : 'text-slate-400'}>
                   {weekday_score.toLocaleString()}
                 </span>
-                <span className="text-stone-500"> / 1,000</span>
+                <span className="text-slate-500"> / 1,000</span>
               </div>
             </div>
           )}
@@ -150,59 +150,40 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
 
       {/* Photo and Result Map: Side by side when location was asked */}
       {hasLocation ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-stretch">
           {/* Photo */}
-          <div className="flex flex-col space-y-1.5">
-            <div className="flex items-center justify-between text-xs px-1">
-              <span className="font-semibold text-stone-200 font-cinzel">Archival Evidence</span>
-              <span className="text-[11px] text-stone-500">Record</span>
-            </div>
-            <div className="relative rounded-2xl overflow-hidden bg-[#141210] border border-stone-800 shadow-md h-[280px] sm:h-[320px]">
-              <img
-                src={imageUrl}
-                alt={caption || 'Archival photo result'}
-                referrerPolicy="no-referrer"
-                onClick={() => setIsLightboxOpen(true)}
-                className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
-              />
-              <button
-                type="button"
-                onClick={() => setIsLightboxOpen(true)}
-                className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-stone-300 hover:text-white text-xs flex items-center gap-1 cursor-pointer"
-              >
-                <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                <span>Enlarge</span>
-              </button>
-            </div>
+          <div className="relative rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-md h-[240px] xs:h-[280px] sm:h-[320px]">
+            <img
+              src={imageUrl}
+              alt={caption || 'Archival photo result'}
+              referrerPolicy="no-referrer"
+              onClick={() => setIsLightboxOpen(true)}
+              className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
+            />
+            <button
+              type="button"
+              onClick={() => setIsLightboxOpen(true)}
+              className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-slate-200 hover:text-white text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
+            >
+              <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>Enlarge</span>
+            </button>
           </div>
 
           {/* Result Map */}
-          <div className="flex flex-col space-y-1.5">
-            <div className="flex items-center justify-between text-xs px-1">
-              <span className="font-semibold text-stone-200 flex items-center gap-1.5 font-cinzel">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                Geographic Accuracy
-              </span>
-              {distance_km !== null && (
-                <span className="text-xs font-mono text-amber-400 font-bold">
-                  {Math.round(distance_km).toLocaleString()} km
-                </span>
-              )}
-            </div>
-            <div className="h-[280px] sm:h-[320px]">
-              <ResultMap
-                guessLat={guess_lat}
-                guessLng={guess_lng}
-                actualLat={actual_lat}
-                actualLng={actual_lng}
-                distanceKm={distance_km}
-              />
-            </div>
+          <div className="h-[240px] xs:h-[280px] sm:h-[320px] rounded-2xl overflow-hidden border border-slate-800">
+            <ResultMap
+              guessLat={guess_lat}
+              guessLng={guess_lng}
+              actualLat={actual_lat}
+              actualLng={actual_lng}
+              distanceKm={distance_km}
+            />
           </div>
         </div>
       ) : (
         /* Photo when no location asked */
-        <div className="relative rounded-2xl overflow-hidden bg-[#141210] border border-stone-800 shadow-md aspect-[16/10] max-h-64">
+        <div className="relative rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-md aspect-[16/10] max-h-64">
           <img
             src={imageUrl}
             alt={caption || 'Archival photo result'}
@@ -213,7 +194,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
           <button
             type="button"
             onClick={() => setIsLightboxOpen(true)}
-            className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-stone-300 hover:text-white text-xs flex items-center gap-1 cursor-pointer"
+            className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-slate-200 hover:text-white text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
           >
             <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
             <span>Enlarge</span>
@@ -222,9 +203,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       )}
 
       {/* Year Timeline */}
-      <div className="bg-[#141210] border border-stone-800 rounded-2xl p-4 space-y-3">
+      <div className="bg-[#0b1120] border border-slate-800 rounded-2xl p-4 space-y-3">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-stone-300 flex items-center gap-1.5">
+          <span className="font-semibold text-slate-200 flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-amber-400" />
             Chronological Comparison
           </span>
@@ -240,8 +221,8 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">
-          <div className="bg-stone-950/70 border border-stone-800 rounded-xl p-2.5 text-center">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-stone-400 block font-mono">
+          <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 text-center">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block font-mono">
               You Guessed
             </span>
             <span className="text-2xl font-black font-cinzel text-amber-400 font-mono">
@@ -249,7 +230,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
             </span>
           </div>
 
-          <div className="bg-amber-950/20 border border-amber-800/40 rounded-xl p-2.5 text-center">
+          <div className="bg-amber-950/20 border border-amber-500/30 rounded-xl p-2.5 text-center">
             <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300/80 block font-mono">
               Actual Year
             </span>
@@ -260,9 +241,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
         </div>
 
         <div className="pt-2 space-y-1.5">
-          <div className="relative w-full h-3 bg-stone-950 rounded-full border border-stone-800 overflow-visible">
+          <div className="relative w-full h-3 bg-slate-950 rounded-full border border-slate-800 overflow-visible">
             <div
-              className="absolute top-0 bottom-0 bg-amber-600/30 rounded-full"
+              className="absolute top-0 bottom-0 bg-amber-500/30 rounded-full"
               style={{
                 left: `${minPercent}%`,
                 width: `${deltaWidth}%`,
@@ -273,20 +254,20 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
               style={{ left: `${guessPercent}%` }}
               title={`Guessed ${guess_year}`}
             >
-              <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-stone-950 shadow-md ring-2 ring-amber-500/50" />
+              <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950 shadow-md ring-2 ring-amber-500/50" />
             </div>
             <div
               className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-20"
               style={{ left: `${truePercent}%` }}
               title={`Actual ${true_year}`}
             >
-              <div className="w-4 h-4 rounded-full bg-emerald-400 border-2 border-stone-950 shadow-md ring-2 ring-emerald-500/60" />
+              <div className="w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-950 shadow-md ring-2 ring-emerald-500/60" />
             </div>
           </div>
 
-          <div className="flex justify-between items-center text-[10px] text-stone-500 font-mono">
+          <div className="flex flex-wrap gap-y-1 justify-between items-center text-[10px] text-slate-400 font-mono">
             <span>{MIN_YEAR}</span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 xs:gap-3">
               <span className="text-amber-400">● Guess ({guess_year})</span>
               <span className="text-emerald-400">● Actual ({true_year})</span>
             </div>
@@ -296,13 +277,13 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       </div>
 
       {/* Archival Context, Fun Fact & Credit */}
-      <div className="bg-[#141210]/90 border border-stone-800 rounded-2xl p-4 space-y-3">
+      <div className="bg-[#0b1120]/90 border border-slate-800 rounded-2xl p-4 space-y-3">
         {caption && (
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 font-mono">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
               Photo Record
             </span>
-            <p className="text-xs text-stone-200 leading-relaxed font-medium">
+            <p className="text-xs text-slate-200 leading-relaxed font-medium">
               {caption}
             </p>
           </div>
@@ -351,7 +332,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
           type="button"
           disabled={isLoadingNext}
           onClick={onProceed}
-          className="w-full py-4 px-6 rounded-2xl bg-amber-600 hover:bg-amber-500 active:scale-[0.98] text-stone-950 font-bold text-base shadow-lg shadow-amber-950/40 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
+          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 active:scale-[0.98] text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
         >
           {isLoadingNext ? (
             <div className="w-5 h-5 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />

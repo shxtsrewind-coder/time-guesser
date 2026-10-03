@@ -47,7 +47,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [gameId, setGameId] = useState<string | null>(() => {
     return sessionStorage.getItem('timeguess_active_id');
   });
-  const [gameMode, setGameMode] = useState<GameMode>('classic');
+  const [gameMode, setGameMode] = useState<GameMode>('daily');
   const [rounds, setRounds] = useState<RoundInfo[]>([]);
   const [results, setResults] = useState<Record<number, SubmitGuessResponse>>({});
   const [finishData, setFinishData] = useState<FinishGameResponse | null>(null);
@@ -131,12 +131,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsLoadingGame(true);
       try {
         const { data, error } = await supabase.functions.invoke('start-game', {
-          body: { mode: 'classic' }, // Backend resumes in-progress games automatically
+          body: { mode: 'daily' }, // Backend resumes in-progress games automatically
         });
 
         if (!error && data && data.game_id === targetGameId && data.rounds) {
           setGameId(data.game_id);
-          setGameMode(data.mode || 'classic');
+          setGameMode(data.mode || 'daily');
           setRounds(data.rounds);
           const computedMax = data.rounds.reduce(
             (sum: number, r: RoundInfo) => sum + (r.max_score || 5000),
@@ -145,7 +145,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setMaxTotalScore(computedMax);
           persistState(
             data.game_id,
-            data.mode || 'classic',
+            data.mode || 'daily',
             data.rounds,
             {},
             null,

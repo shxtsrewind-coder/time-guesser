@@ -211,7 +211,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
         </div>
 
         <div className="py-1">
-          <div className="text-4xl sm:text-5xl font-black text-amber-300 font-cinzel tracking-tight flex items-center justify-center gap-2">
+          <div className="text-4xl sm:text-5xl font-black text-amber-300 font-cinzel tracking-tight flex items-center justify-center gap-2 animate-score-pop">
             <span>+{score.toLocaleString()}</span>
             <span className="text-xs font-sans uppercase font-bold text-amber-500/80 px-2 py-0.5 rounded-full bg-amber-950/60 border border-amber-800/40 font-mono">
               / {round_max?.toLocaleString() || '5,000'} pts

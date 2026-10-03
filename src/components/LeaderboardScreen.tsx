@@ -11,18 +11,19 @@ import {
   Compass,
   User,
   Zap,
+  Flame,
 } from 'lucide-react';
 import { supabase, parseSupabaseError } from '../lib/supabase.ts';
-import { DailyLeaderboardRow, AllTimeLeaderboardRow } from '../types.ts';
+import { DailyLeaderboardRow, AllTimeLeaderboardRow, DecadeSortLeaderboardRow } from '../types.ts';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
 import { getUserCountryCode, codeToFlagEmoji } from '../lib/countryFlags.ts';
 
 interface LeaderboardScreenProps {
   onBack: () => void;
-  onStartClassic: () => void;
   currentUserId?: string | null;
   currentDisplayName?: string;
   onOpenRemoveAds?: () => void;
+  initialTab?: 'daily' | 'alltime' | 'decade_sort';
 }
 
 interface RankedEntry {
@@ -31,17 +32,19 @@ interface RankedEntry {
   score: number;
   countryCode?: string | null;
   flagEmoji: string | null;
+  streak?: number;
 }
 
 export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   onBack,
-  onStartClassic,
   currentDisplayName,
   onOpenRemoveAds,
+  initialTab = 'daily',
 }) => {
-  const [activeTab, setActiveTab] = useState<'daily' | 'alltime'>('daily');
+  const [activeTab, setActiveTab] = useState<'daily' | 'alltime' | 'decade_sort'>(initialTab);
   const [dailyScores, setDailyScores] = useState<DailyLeaderboardRow[]>([]);
   const [allTimeScores, setAllTimeScores] = useState<AllTimeLeaderboardRow[]>([]);
+  const [decadeScores, setDecadeScores] = useState<DecadeSortLeaderboardRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,10 +71,14 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         const { data, error } = await supabase.rpc('leaderboard_daily');
         if (error) throw error;
         setDailyScores(Array.isArray(data) ? data : []);
-      } else {
+      } else if (activeTab === 'alltime') {
         const { data, error } = await supabase.rpc('leaderboard_alltime');
         if (error) throw error;
         setAllTimeScores(Array.isArray(data) ? data : []);
+      } else {
+        const { data, error } = await supabase.rpc('decade_sort_leaderboard');
+        if (error) throw error;
+        setDecadeScores(Array.isArray(data) ? data : []);
       }
     } catch (err: any) {
       const parsed = await parseSupabaseError(err);
@@ -102,7 +109,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         countryCode: row.country_code || (row as any).country || null,
         flagEmoji: resolveFlag(row.display_name, row.country_code || (row as any).country),
       }));
-    } else {
+    } else if (activeTab === 'alltime') {
       return allTimeScores.map((row, idx) => ({
         rank: row.rank || idx + 1,
         displayName: row.display_name || 'Anonymous Chrononaut',
@@ -110,8 +117,17 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         countryCode: row.country_code || (row as any).country || null,
         flagEmoji: resolveFlag(row.display_name, row.country_code || (row as any).country),
       }));
+    } else {
+      return decadeScores.map((row, idx) => ({
+        rank: row.rank || idx + 1,
+        displayName: row.display_name || 'Anonymous Chrononaut',
+        score: row.best_score ?? (row as any).score ?? 0,
+        streak: row.streak ?? (row as any).decade_sort_streak ?? 0,
+        countryCode: row.country_code || (row as any).country || null,
+        flagEmoji: resolveFlag(row.display_name, row.country_code || (row as any).country),
+      }));
     }
-  }, [activeTab, dailyScores, allTimeScores, currentDisplayName, userCountryCode]);
+  }, [activeTab, dailyScores, allTimeScores, decadeScores, currentDisplayName, userCountryCode]);
 
   const filteredList = useMemo(() => {
     if (!searchQuery.trim()) return currentList;
@@ -209,41 +225,49 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
       </div>
 
       {/* Main Title Section */}
-      <div className="text-center space-y-2">
-        <p className="text-xs uppercase tracking-widest text-amber-500 font-mono font-medium">
-          Global Chrono Rankings
-        </p>
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-cinzel text-stone-100">
+      <div className="text-center space-y-1.5">
+        <h1 className="text-3xl sm:text-4xl font-extrabold font-cinzel text-slate-100">
           Leaderboard
         </h1>
-        <p className="text-xs sm:text-sm text-stone-400 max-w-md mx-auto">
-          Compete with players around the world in temporal accuracy and geographical intuition.
+        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+          Global rankings by chronological accuracy and geography.
         </p>
       </div>
 
-      {/* Segmented Mode Selector */}
-      <div className="flex max-w-sm mx-auto p-1 rounded-xl bg-stone-900/90 border border-stone-800 shadow-inner">
+      {/* Segmented Mode Selector (3 Modes - Mobile Ergonomic Labels) */}
+      <div className="flex max-w-md mx-auto p-1 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner">
         <button
           type="button"
           onClick={() => setActiveTab('daily')}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 py-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === 'daily'
-              ? 'bg-amber-600 text-stone-950 shadow-md shadow-amber-950/50'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-amber-600 text-slate-950 shadow-md shadow-amber-950/50'
+              : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Daily Challenge
         </button>
         <button
           type="button"
-          onClick={() => setActiveTab('alltime')}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-            activeTab === 'alltime'
-              ? 'bg-amber-600 text-stone-950 shadow-md shadow-amber-950/50'
-              : 'text-stone-400 hover:text-stone-200'
+          onClick={() => setActiveTab('decade_sort')}
+          className={`flex-1 py-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            activeTab === 'decade_sort'
+              ? 'bg-amber-600 text-slate-950 shadow-md shadow-amber-950/50'
+              : 'text-slate-400 hover:text-slate-200'
           }`}
         >
-          All-Time High Scores
+          Decade Sort
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('alltime')}
+          className={`flex-1 py-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            activeTab === 'alltime'
+              ? 'bg-amber-600 text-slate-950 shadow-md shadow-amber-950/50'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          All-Time Best
         </button>
       </div>
 
@@ -539,10 +563,18 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                       </div>
 
                       <div className="text-right shrink-0">
-                        <span className="font-mono text-xs font-bold text-amber-400 tabular-nums">
-                          {row.score.toLocaleString()}
-                        </span>
-                        <span className="text-[10px] text-stone-500 font-sans ml-1">pts</span>
+                        <div className="flex items-center justify-end gap-1.5">
+                          {row.streak !== undefined && row.streak > 0 && (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-950/70 border border-amber-800/80 text-amber-300">
+                              <Flame className="w-3 h-3 fill-amber-400 text-amber-400" />
+                              <span>{row.streak}</span>
+                            </span>
+                          )}
+                          <span className="font-mono text-xs font-bold text-amber-400 tabular-nums">
+                            {row.score.toLocaleString()}
+                          </span>
+                          <span className="text-[10px] text-stone-500 font-sans">pts</span>
+                        </div>
                       </div>
                     </div>
                   );

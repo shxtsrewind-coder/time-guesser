@@ -47,7 +47,7 @@ export async function fetchStripeConfig(): Promise<StripeConfig> {
   }
   return {
     configured: true,
-    productName: 'TimeGuess Ad-Free Pass',
+    productName: 'When & Where Ad-Free Pass',
     priceUsd: 2.99,
     priceCents: 299,
     currency: 'USD',

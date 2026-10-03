@@ -106,7 +106,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 tracking-wide">
-            Welcome to TimeGuess
+            Welcome to When &amp; Where
           </h2>
 
           <p className="text-stone-300 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">

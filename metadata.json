@@ -1,6 +1,6 @@
 {
-  "name": "TimeGuess",
-  "description": "Cinematic historical photo year guessing game. Guess the year across five rounds of history.",
+  "name": "When & Where",
+  "description": "Cinematic historical photograph deduction game. Pinpoint the year and location across archival challenges.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

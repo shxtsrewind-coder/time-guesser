@@ -47,6 +47,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="page-enter w-full">
       <HomeScreen
         onStartGame={handleStartGame}
+        onOpenDecadeSort={() => navigate('/decade-sort')}
         onOpenLeaderboard={() => navigate('/leaderboard')}
         onOpenRemoveAds={onOpenRemoveAds}
         isAnonymous={isAnonymous}

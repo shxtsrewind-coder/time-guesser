@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Minus, Plus, Maximize2, Flag, AlertCircle, Sparkles, MapPin, Calendar, Clock, HelpCircle } from 'lucide-react';
+import { Minus, Plus, Maximize2, Flag, AlertCircle, Sparkles, MapPin, Calendar, Clock, HelpCircle, Eye } from 'lucide-react';
 import { RoundInfo } from '../types.ts';
 import { PhotoLightbox } from './PhotoLightbox.tsx';
 import { GuessMap } from './GuessMap.tsx';
@@ -49,6 +49,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
   const [guessLat, setGuessLat] = useState<number | null>(null);
   const [guessLng, setGuessLng] = useState<number | null>(null);
   const [guessWeekday, setGuessWeekday] = useState<number | null>(null);
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isScoringInfoOpen, setIsScoringInfoOpen] = useState(false);
@@ -65,6 +66,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
     setGuessLat(null);
     setGuessLng(null);
     setGuessWeekday(null);
+    setIsMapExpanded(false);
   }, [roundInfo.round_no, roundInfo.image_url]);
 
   const handleDecrement = () => {
@@ -132,44 +134,44 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-4 pb-16">
+    <div className="w-full max-w-6xl mx-auto px-3.5 sm:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4 pb-20 sm:pb-16">
       {/* Top Meta Bar */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between border-b border-stone-800/80 pb-3">
-          <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-wider font-semibold text-amber-500 font-mono">
+        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 sm:pb-3 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-xs uppercase tracking-wider font-semibold text-amber-400 font-mono shrink-0">
               Round {roundNumber} of {totalRounds}
             </span>
-            <div className="flex gap-1.5 items-center">
+            <div className="flex gap-1 sm:gap-1.5 items-center">
               {Array.from({ length: totalRounds }).map((_, idx) => (
                 <div
                   key={idx}
                   className={`h-1.5 rounded-full transition-all ${
                     idx + 1 === roundNumber
-                      ? 'w-6 bg-amber-400'
+                      ? 'w-5 sm:w-6 bg-amber-400 shadow-sm shadow-amber-400/50'
                       : idx + 1 < roundNumber
-                      ? 'w-2.5 bg-amber-600/70'
-                      : 'w-2 bg-stone-800'
+                      ? 'w-2 sm:w-2.5 bg-cyan-500/80'
+                      : 'w-2 bg-slate-800'
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
             <button
               type="button"
               onClick={() => setIsScoringInfoOpen(true)}
-              className="text-stone-400 hover:text-amber-400 text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="text-slate-400 hover:text-cyan-400 text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               title="How scoring works"
             >
-              <HelpCircle className="w-4 h-4 text-amber-500/80" />
+              <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400/90" />
               <span className="hidden xs:inline">Scoring Rules</span>
             </button>
 
             <div className="text-right">
-              <span className="text-xs text-stone-400">Score </span>
-              <span className="text-sm font-bold text-stone-100 tabular-nums font-mono">
+              <span className="text-[11px] sm:text-xs text-slate-400">Score </span>
+              <span className="text-xs sm:text-sm font-bold text-slate-100 tabular-nums font-mono">
                 {runningScore.toLocaleString()}
               </span>
             </div>
@@ -193,136 +195,100 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
         )}
       </div>
 
-      {/* Main Section: When ask_location is true, image and map stand SIDE BY SIDE! */}
+      {/* Main Section: When ask_location is true, image and map stand together on BOTH mobile and desktop! */}
       {roundInfo.ask_location ? (
-        <div className="space-y-4">
-          {/* SIDE-BY-SIDE: Image on the Left, Map on the Right */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-stretch">
+        <div className="space-y-3 sm:space-y-4">
+          {/* Photo & Map: Stood together! Side-by-side on md+, stacked on mobile with expand affordance */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 items-stretch">
             {/* Left: Archival Photograph Showcase */}
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between text-xs px-1">
-                <span className="font-semibold text-stone-200 flex items-center gap-1.5 font-cinzel">
-                  Archival Evidence
-                </span>
-                <span className="text-[11px] text-stone-400">Examine details & clues</span>
-              </div>
+            <div className="relative group rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-xl h-[200px] xs:h-[220px] sm:h-[280px] md:h-[440px] flex items-center justify-center">
+              {!imageLoaded && !imageError && (
+                <div className="absolute inset-0 bg-[#0b1120] animate-pulse flex flex-col items-center justify-center gap-2 text-slate-500">
+                  <div className="w-7 h-7 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin" />
+                </div>
+              )}
 
-              <div className="relative group rounded-3xl overflow-hidden bg-[#141210] border border-stone-800 shadow-xl h-[320px] sm:h-[380px] md:h-[440px] flex items-center justify-center">
-                {!imageLoaded && !imageError && (
-                  <div className="absolute inset-0 bg-[#141210] animate-pulse flex flex-col items-center justify-center gap-2.5 text-stone-500">
-                    <div className="w-8 h-8 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin" />
-                    <span className="text-xs font-cinzel tracking-widest uppercase">
-                      Retrieving Archive...
-                    </span>
-                  </div>
-                )}
-
-                {imageError ? (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-stone-400 gap-2">
-                    <AlertCircle className="w-8 h-8 text-amber-500" />
-                    <p className="text-xs">Photograph preview could not be loaded.</p>
-                    <button
-                      onClick={() => {
-                        setImageError(false);
-                        setImageLoaded(false);
-                      }}
-                      className="text-xs text-amber-400 underline cursor-pointer"
-                    >
-                      Reload Image
-                    </button>
-                  </div>
-                ) : (
-                  <img
-                    src={roundInfo.image_url}
-                    alt="Historical archival photograph"
-                    referrerPolicy="no-referrer"
-                    onLoad={() => setImageLoaded(true)}
-                    onError={() => setImageError(true)}
-                    onClick={() => setIsLightboxOpen(true)}
-                    className={`w-full h-full object-cover transition-opacity duration-300 cursor-pointer select-none ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                )}
-
-                {/* Zoom button */}
-                <button
-                  type="button"
+              {imageError ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-slate-400 gap-2">
+                  <AlertCircle className="w-7 h-7 text-amber-500" />
+                  <button
+                    onClick={() => {
+                      setImageError(false);
+                      setImageLoaded(false);
+                    }}
+                    className="text-xs text-amber-400 underline cursor-pointer"
+                  >
+                    Reload
+                  </button>
+                </div>
+              ) : (
+                <img
+                  src={roundInfo.image_url}
+                  alt="Archival photograph"
+                  referrerPolicy="no-referrer"
+                  onLoad={() => setImageLoaded(true)}
+                  onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}
-                  aria-label="Zoom photo"
-                  className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/80 hover:bg-black/95 backdrop-blur-md border border-stone-700/80 text-stone-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
-                >
-                  <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="font-medium text-xs">Zoom & Inspect</span>
-                </button>
-              </div>
+                  className={`w-full h-full object-cover select-none cursor-pointer transition-all duration-300 ${
+                    imageLoaded ? 'opacity-100 animate-photo-reveal' : 'opacity-0'
+                  }`}
+                />
+              )}
 
-              <div className="flex items-center justify-between text-[11px] text-stone-500 px-1 pt-0.5">
-                <span>Tip: Look for vehicles, signs, and architecture</span>
-                <button
-                  type="button"
-                  onClick={() => setReportClicked(true)}
-                  className="hover:text-stone-300 transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <Flag className="w-3 h-3 text-stone-600" />
-                  <span>{reportClicked ? 'Photo reported' : 'Report photo'}</span>
-                </button>
-              </div>
+              {/* Report affordance */}
+              <button
+                type="button"
+                onClick={() => setReportClicked(true)}
+                title="Report issue with photo"
+                className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-900 border border-slate-800/80 text-slate-400 hover:text-slate-200 transition-colors text-[11px] flex items-center gap-1 cursor-pointer"
+              >
+                <Flag className="w-3 h-3" />
+                {reportClicked && <span>Reported</span>}
+              </button>
+
+              {/* Zoom button */}
+              <button
+                type="button"
+                onClick={() => setIsLightboxOpen(true)}
+                aria-label="Enlarge photo"
+                className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
+              >
+                <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-medium text-xs">Zoom</span>
+              </button>
             </div>
 
-            {/* Right: Map Stand Side-by-Side */}
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between text-xs px-1">
-                <div className="flex items-center gap-1.5 font-semibold text-stone-200 font-cinzel">
-                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Geographic Pin</span>
-                </div>
-                {guessLat !== null && guessLng !== null ? (
-                  <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                    ✓ Pin Placed
-                  </span>
-                ) : (
-                  <span className="text-[11px] text-amber-400/90 font-medium">
-                    Required · Click map to drop pin
-                  </span>
-                )}
-              </div>
-
-              <div className="h-[320px] sm:h-[380px] md:h-[440px]">
-                <GuessMap
-                  lat={guessLat}
-                  lng={guessLng}
-                  onChange={(lat, lng) => {
-                    setGuessLat(lat);
-                    setGuessLng(lng);
-                  }}
-                  disabled={isSubmitting}
-                />
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-stone-500 px-1 pt-0.5">
-                <span>Pan or use region tabs · Drag pin to refine</span>
-                {guessLat !== null && guessLng !== null && (
-                  <span className="text-emerald-400/90 font-mono font-medium">Ready</span>
-                )}
-              </div>
+            {/* Right: Map Stand (Docked below photo on mobile, side-by-side on desktop) */}
+            <div
+              className={`transition-all duration-200 ${
+                isMapExpanded
+                  ? 'h-[380px] xs:h-[420px] sm:h-[460px] md:h-[440px]'
+                  : 'h-[210px] xs:h-[230px] sm:h-[280px] md:h-[440px]'
+              }`}
+            >
+              <GuessMap
+                lat={guessLat}
+                lng={guessLng}
+                onChange={(lat, lng) => {
+                  setGuessLat(lat);
+                  setGuessLng(lng);
+                }}
+                disabled={isSubmitting}
+                isExpanded={isMapExpanded}
+                onToggleExpand={() => setIsMapExpanded(!isMapExpanded)}
+              />
             </div>
           </div>
 
           {/* Controls Below: Year Slider & Weekday Picker & Lock In Guess */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch pt-1">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-stretch pt-1">
             {/* Year Selector (always shown) */}
-            <div className={`space-y-3 bg-[#141210]/95 border border-stone-800 rounded-3xl p-4 shadow-md ${
+            <div className={`space-y-2 bg-[#0b1120]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md ${
               roundInfo.ask_weekday ? 'md:col-span-6 lg:col-span-6' : 'md:col-span-8'
             }`}>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 font-semibold text-stone-200">
-                  <Calendar className="w-4 h-4 text-amber-400" />
-                  <span>Chronological Year</span>
-                </div>
-                <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                  ✓ {guessYear}
-                </span>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                <span>Estimated Year</span>
               </div>
 
               {/* Large Year Number Display */}
@@ -333,7 +299,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                     onClick={handleDecrement}
                     disabled={guessYear <= MIN_YEAR || isSubmitting}
                     aria-label="Decrement year by 1"
-                    className="w-9 h-9 rounded-full bg-stone-900 border border-stone-700/80 hover:border-amber-500/60 text-stone-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
+                    className="w-9 h-9 rounded-full bg-slate-900 border border-slate-750 hover:border-amber-500/60 text-slate-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
@@ -349,7 +315,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                     onClick={handleIncrement}
                     disabled={guessYear >= MAX_YEAR || isSubmitting}
                     aria-label="Increment year by 1"
-                    className="w-9 h-9 rounded-full bg-stone-900 border border-stone-700/80 hover:border-amber-500/60 text-stone-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
+                    className="w-9 h-9 rounded-full bg-slate-900 border border-slate-750 hover:border-amber-500/60 text-slate-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -377,14 +343,14 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   />
                 </div>
 
-                <div className="flex justify-between items-center text-[10px] text-stone-500 font-mono select-none px-1">
+                <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono select-none px-1">
                   <span>{MIN_YEAR}</span>
                   {decades.map((d) => (
                     <span
                       key={d}
                       onClick={() => setGuessYear(d)}
                       className={`cursor-pointer transition-colors ${
-                        Math.abs(guessYear - d) < 10 ? 'text-amber-400 font-semibold' : 'hover:text-stone-300'
+                        Math.abs(guessYear - d) < 10 ? 'text-amber-400 font-semibold' : 'hover:text-slate-300'
                       }`}
                     >
                       {d}
@@ -397,21 +363,10 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
             {/* Weekday Selector (if ask_weekday is true) */}
             {roundInfo.ask_weekday && (
-              <div className="space-y-2.5 bg-[#141210]/95 border border-stone-800 rounded-3xl p-4 shadow-md md:col-span-6 lg:col-span-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 font-semibold text-stone-200">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    <span>Day of Week</span>
-                  </div>
-                  {guessWeekday !== null ? (
-                    <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                      ✓ {WEEKDAYS.find((w) => w.id === guessWeekday)?.label}
-                    </span>
-                  ) : (
-                    <span className="text-[11px] text-amber-400/90 font-medium">
-                      Required
-                    </span>
-                  )}
+              <div className="space-y-2.5 bg-[#0b1120]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md md:col-span-6 lg:col-span-3 flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                  <Clock className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Day of Week</span>
                 </div>
 
                 {/* 7 Segmented Buttons: Sun Mon Tue Wed Thu Fri Sat */}
@@ -424,20 +379,16 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         type="button"
                         disabled={isSubmitting}
                         onClick={() => setGuessWeekday(day.id)}
-                        className={`py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
+                        className={`py-2 px-0 rounded-lg xs:rounded-xl text-[10px] xs:text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer min-w-0 ${
                           isSelected
-                            ? 'bg-gradient-to-b from-amber-500 to-amber-600 text-stone-950 shadow-md shadow-amber-950/50 ring-2 ring-amber-300 scale-[1.03]'
-                            : 'bg-stone-900 hover:bg-stone-850 border border-stone-800 text-stone-300 hover:text-white active:scale-95'
+                            ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-950/50 ring-2 ring-purple-300 scale-[1.03]'
+                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
                         }`}
                       >
-                        <span>{day.label}</span>
+                        <span className="truncate">{day.label}</span>
                       </button>
                     );
                   })}
-                </div>
-
-                <div className="text-[10px] text-stone-500 text-center font-mono">
-                  +1,000 pt calendar precision bonus
                 </div>
               </div>
             )}
@@ -450,25 +401,31 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 disabled={!isReadyToLockIn}
                 onClick={handleSubmit}
-                className="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-stone-950 font-bold text-base shadow-xl shadow-amber-950/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
+                className="w-full py-3.5 sm:py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
                     <span>Submitting...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 fill-stone-950" />
+                    <Sparkles className="w-4 h-4 fill-slate-950" />
                     <span>Lock In Guess</span>
                   </>
                 )}
               </button>
 
               {missingRequirements.length > 0 && (
-                <div className="text-[11px] text-stone-400 text-center">
-                  <span className="text-amber-500 font-medium">To submit: </span>
-                  <span>{missingRequirements.join(' and ')}</span>
+                <div className="text-[11px] text-slate-400 text-center">
+                  <span className="text-amber-400 font-medium">To submit: </span>
+                  {roundInfo.ask_location && (guessLat === null || guessLng === null) ? (
+                    <span className="text-cyan-400">place pin on map</span>
+                  ) : null}
+                  {roundInfo.ask_location && (guessLat === null || guessLng === null) && roundInfo.ask_weekday && guessWeekday === null ? ' and ' : ''}
+                  {roundInfo.ask_weekday && guessWeekday === null ? (
+                    <span className="text-purple-300 font-medium">choose day of week</span>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -478,20 +435,16 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
         /* When ask_location is false: Photo on Left (7 cols), Controls on Right (5 cols) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-7 space-y-3">
-            <div className="relative group rounded-3xl overflow-hidden bg-[#141210] border border-stone-800 shadow-2xl aspect-[4/3] flex items-center justify-center">
+            <div className="relative group rounded-3xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-2xl aspect-[4/3] flex items-center justify-center">
               {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 bg-[#141210] animate-pulse flex flex-col items-center justify-center gap-2.5 text-stone-500">
+                <div className="absolute inset-0 bg-[#0b1120] animate-pulse flex flex-col items-center justify-center gap-2.5 text-slate-500">
                   <div className="w-8 h-8 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin" />
-                  <span className="text-xs font-cinzel tracking-widest uppercase">
-                    Retrieving Archive...
-                  </span>
                 </div>
               )}
 
               {imageError ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-stone-400 gap-2">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-slate-400 gap-2">
                   <AlertCircle className="w-8 h-8 text-amber-500" />
-                  <p className="text-xs">Photograph preview could not be loaded.</p>
                   <button
                     onClick={() => {
                       setImageError(false);
@@ -499,19 +452,19 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                     }}
                     className="text-xs text-amber-400 underline cursor-pointer"
                   >
-                    Reload Image
+                    Reload
                   </button>
                 </div>
               ) : (
                 <img
                   src={roundInfo.image_url}
-                  alt="Historical archival photograph"
+                  alt="Archival photograph"
                   referrerPolicy="no-referrer"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}
-                  className={`w-full h-full object-cover transition-opacity duration-300 cursor-pointer select-none ${
-                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  className={`w-full h-full object-cover transition-all duration-300 cursor-pointer select-none ${
+                    imageLoaded ? 'opacity-100 animate-photo-reveal' : 'opacity-0'
                   }`}
                 />
               )}
@@ -520,21 +473,20 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 onClick={() => setIsLightboxOpen(true)}
                 aria-label="Zoom photo"
-                className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/80 hover:bg-black/95 backdrop-blur-md border border-stone-700/80 text-stone-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
+                className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
               >
                 <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                <span className="font-medium text-xs">Zoom & Inspect</span>
+                <span className="font-medium text-xs">Zoom</span>
               </button>
             </div>
 
-            <div className="flex items-center justify-between text-xs text-stone-500 px-1">
-              <span>Clues: Examine architecture, clothing fashion, vehicles, and signage.</span>
+            <div className="flex items-center justify-end text-xs text-slate-400 px-1">
               <button
                 type="button"
                 onClick={() => setReportClicked(true)}
-                className="hover:text-stone-300 transition-colors flex items-center gap-1 cursor-pointer"
+                className="hover:text-slate-300 transition-colors flex items-center gap-1 cursor-pointer"
               >
-                <Flag className="w-3 h-3 text-stone-600" />
+                <Flag className="w-3 h-3 text-slate-500" />
                 <span>{reportClicked ? 'Photo reported' : 'Report photo'}</span>
               </button>
             </div>
@@ -542,15 +494,10 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
           <div className="lg:col-span-5 space-y-4">
             {/* Year Selector */}
-            <div className="space-y-3 bg-[#141210]/95 border border-stone-800 rounded-3xl p-5 shadow-md">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 font-semibold text-stone-200">
-                  <Calendar className="w-4 h-4 text-amber-400" />
-                  <span>1. Guess Year</span>
-                </div>
-                <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                  ✓ Year {guessYear}
-                </span>
+            <div className="space-y-3 bg-[#0b1120]/95 border border-slate-800 rounded-3xl p-5 shadow-md">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                <Calendar className="w-4 h-4 text-amber-400" />
+                <span>Estimated Year</span>
               </div>
 
               <div className="text-center py-2">
@@ -560,7 +507,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                     onClick={handleDecrement}
                     disabled={guessYear <= MIN_YEAR || isSubmitting}
                     aria-label="Decrement year by 1"
-                    className="w-10 h-10 rounded-full bg-stone-900 border border-stone-700/80 hover:border-amber-500/60 text-stone-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
+                    className="w-10 h-10 rounded-full bg-slate-900 border border-slate-750 hover:border-amber-500/60 text-slate-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
                   >
                     <Minus className="w-5 h-5" />
                   </button>
@@ -576,7 +523,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                     onClick={handleIncrement}
                     disabled={guessYear >= MAX_YEAR || isSubmitting}
                     aria-label="Increment year by 1"
-                    className="w-10 h-10 rounded-full bg-stone-900 border border-stone-700/80 hover:border-amber-500/60 text-stone-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
+                    className="w-10 h-10 rounded-full bg-slate-900 border border-slate-750 hover:border-amber-500/60 text-slate-200 hover:text-amber-400 flex items-center justify-center active:scale-90 transition-all disabled:opacity-30 shadow-sm cursor-pointer"
                   >
                     <Plus className="w-5 h-5" />
                   </button>
@@ -603,14 +550,14 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   />
                 </div>
 
-                <div className="flex justify-between items-center text-[10px] text-stone-500 font-mono select-none px-1">
+                <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono select-none px-1">
                   <span>{MIN_YEAR}</span>
                   {decades.map((d) => (
                     <span
                       key={d}
                       onClick={() => setGuessYear(d)}
                       className={`cursor-pointer transition-colors ${
-                        Math.abs(guessYear - d) < 10 ? 'text-amber-400 font-semibold' : 'hover:text-stone-300'
+                        Math.abs(guessYear - d) < 10 ? 'text-amber-400 font-semibold' : 'hover:text-slate-300'
                       }`}
                     >
                       {d}
@@ -623,21 +570,10 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
             {/* Weekday Selector */}
             {roundInfo.ask_weekday && (
-              <div className="space-y-2.5 bg-[#141210]/95 border border-stone-800 rounded-3xl p-4 shadow-md">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 font-semibold text-stone-200">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    <span>2. Day of the Week</span>
-                  </div>
-                  {guessWeekday !== null ? (
-                    <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                      ✓ {WEEKDAYS.find((w) => w.id === guessWeekday)?.full}
-                    </span>
-                  ) : (
-                    <span className="text-[11px] text-amber-400/90 font-medium">
-                      Required
-                    </span>
-                  )}
+              <div className="space-y-2.5 bg-[#0b1120]/95 border border-slate-800 rounded-3xl p-4 shadow-md">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                  <Clock className="w-4 h-4 text-purple-400" />
+                  <span>Day of Week</span>
                 </div>
 
                 <div className="grid grid-cols-7 gap-1.5">
@@ -651,8 +587,8 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         onClick={() => setGuessWeekday(day.id)}
                         className={`py-2.5 px-1 rounded-xl text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
                           isSelected
-                            ? 'bg-gradient-to-b from-amber-500 to-amber-600 text-stone-950 shadow-md shadow-amber-950/50 ring-2 ring-amber-300 scale-[1.03]'
-                            : 'bg-stone-900 hover:bg-stone-850 border border-stone-800 text-stone-300 hover:text-white active:scale-95'
+                            ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-950/50 ring-2 ring-purple-300 scale-[1.03]'
+                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
                         }`}
                       >
                         <span>{day.label}</span>
@@ -669,24 +605,24 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 disabled={!isReadyToLockIn}
                 onClick={handleSubmit}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-stone-950 font-bold text-base shadow-xl shadow-amber-950/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
+                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />
-                    <span>Verifying Coordinates...</span>
+                    <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                    <span>Verifying...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 fill-stone-950" />
-                    <span>Lock in Guess</span>
+                    <Sparkles className="w-4 h-4 fill-slate-950" />
+                    <span>Lock In Guess</span>
                   </>
                 )}
               </button>
 
               {missingRequirements.length > 0 && (
-                <div className="text-[11px] text-stone-400 text-center flex items-center justify-center gap-1.5 pt-0.5">
-                  <span className="text-amber-500 font-medium">Required:</span>
+                <div className="text-[11px] text-slate-400 text-center flex items-center justify-center gap-1.5 pt-0.5">
+                  <span className="text-amber-400 font-medium">Required:</span>
                   <span>Please {missingRequirements.join(' and ')}</span>
                 </div>
               )}

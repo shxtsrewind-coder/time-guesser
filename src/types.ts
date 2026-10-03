@@ -1,4 +1,39 @@
-export type GameMode = 'classic' | 'daily';
+export type GameMode = 'daily' | 'decade_sort';
+
+export interface DecadeSortPhoto {
+  photo_id: string;
+  image_url: string;
+}
+
+export interface DecadeSortCorrectPhoto {
+  photo_id: string;
+  true_year: number;
+  caption: string;
+}
+
+export interface DecadeSortSubmitResponse {
+  round_id: string;
+  direction?: 'asc' | 'desc';
+  correct_order: DecadeSortCorrectPhoto[];
+  your_order: string[];
+  correct_pairs: number;
+  total_pairs: number;
+  is_perfect: boolean;
+  score: number;
+  streak: number | null;
+  best_score: number | null;
+}
+
+export interface DecadeSortLeaderboardRow {
+  rank: number;
+  display_name: string;
+  streak?: number;
+  decade_sort_streak?: number;
+  best_score?: number;
+  score?: number;
+  country_code?: string | null;
+  country?: string | null;
+}
 
 export interface RoundInfo {
   round_no: number;
