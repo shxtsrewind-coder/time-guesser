@@ -12,6 +12,7 @@ import {
   Sparkles,
   LogIn,
   LogOut,
+  Camera,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase.ts';
 import {
@@ -68,6 +69,36 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [streakData, setStreakData] = useState<StreakData>(getStreakData);
   const [isCompletedToday, setIsCompletedToday] = useState(isDailyCompletedToday);
   const [countdown, setCountdown] = useState(() => getTimeUntilNextDaily().formatted);
+  const [photoCount, setPhotoCount] = useState<number | null>(null);
+
+  // "Photo log" — curiosity made cumulative. A lightweight distinct-photo
+  // count across both Daily/round answers and Decade Sort rounds.
+  useEffect(() => {
+    if (!isOpen || !userId) return;
+    let active = true;
+    (async () => {
+      const [roundsRes, decadeRes] = await Promise.all([
+        supabase
+          .from('rounds')
+          .select('photo_id, games!inner(user_id)')
+          .eq('games.user_id', userId)
+          .not('answered_at', 'is', null),
+        supabase
+          .from('decade_sort_rounds')
+          .select('photo_ids')
+          .eq('user_id', userId)
+          .not('submitted_at', 'is', null),
+      ]);
+      if (!active) return;
+      const seen = new Set<string>();
+      (roundsRes.data || []).forEach((r: any) => r.photo_id && seen.add(r.photo_id));
+      (decadeRes.data || []).forEach((r: any) => (r.photo_ids || []).forEach((id: string) => seen.add(id)));
+      setPhotoCount(seen.size);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [isOpen, userId]);
 
   // Sync state when opened
   useEffect(() => {
@@ -231,6 +262,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <span>Next Daily Puzzle:</span>
             <span className="text-amber-400 font-bold">{countdown}</span>
           </div>
+        </div>
+
+        {/* Photo log — accumulating curiosity */}
+        <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-4 flex items-center gap-2.5">
+          <Camera className="w-4 h-4 text-amber-400 shrink-0" />
+          <span className="text-xs text-stone-300">
+            {photoCount === null ? (
+              <span className="text-stone-500">Counting photographs...</span>
+            ) : (
+              <>
+                <span className="font-bold text-stone-100 font-mono">{photoCount.toLocaleString()}</span>{' '}
+                photograph{photoCount === 1 ? '' : 's'} uncovered
+              </>
+            )}
+          </span>
         </div>
 
         {/* Ad-Free Status Block */}

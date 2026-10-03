@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext.tsx';
+import { supabase } from '../lib/supabase.ts';
 import { FinalResultsScreen } from '../components/FinalResultsScreen.tsx';
 
 interface FinalResultsPageProps {
@@ -30,6 +31,34 @@ export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
   } = useGame();
 
   const [isInitializing, setIsInitializing] = useState(true);
+  const [previousScore, setPreviousScore] = useState<number | null>(null);
+
+  // "Beat your own score" — the previous finished game of the same mode,
+  // excluding this one. Best-effort: if it fails, the comparison just isn't shown.
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      if (!gameId || !gameMode) return;
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData?.user?.id;
+      if (!uid) return;
+      const { data } = await supabase
+        .from('games')
+        .select('id, total_score, finished_at')
+        .eq('user_id', uid)
+        .eq('mode', gameMode)
+        .eq('status', 'finished')
+        .neq('id', gameId)
+        .order('finished_at', { ascending: false })
+        .limit(1);
+      if (active && data && data.length > 0) {
+        setPreviousScore(data[0].total_score ?? null);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [gameId, gameMode]);
 
   useEffect(() => {
     let isMounted = true;
@@ -106,6 +135,7 @@ export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
         onOpenRemoveAds={onOpenRemoveAds}
         isAnonymous={isAnonymous}
         onOpenSaveProgress={onOpenSaveProgress}
+        previousScore={previousScore}
       />
     </div>
   );

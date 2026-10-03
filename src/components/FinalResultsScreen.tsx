@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play, ArrowUpDown } from 'lucide-react';
+import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play, ArrowUpDown, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { FinishGameResponse, GameMode } from '../types.ts';
 import { ArchivalAdBanner } from './ArchivalAdBanner.tsx';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
@@ -13,6 +13,7 @@ interface FinalResultsScreenProps {
   onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
+  previousScore?: number | null;
 }
 
 export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
@@ -23,6 +24,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
   onOpenRemoveAds,
   isAnonymous,
   onOpenSaveProgress,
+  previousScore,
 }) => {
   const [copied, setCopied] = useState(false);
   const isAdFree = getLocalAdFreeStatus();
@@ -51,6 +53,9 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
 
   const validMaxScore = max_score > 0 ? max_score : 25000;
   const percentage = Math.round((total_score / validMaxScore) * 100);
+
+  const hasComparison = typeof previousScore === 'number' && previousScore >= 0;
+  const scoreDelta = hasComparison ? total_score - (previousScore as number) : 0;
 
   const handleShare = async () => {
     const streakPart = mode === 'daily' && streakData.currentStreak > 0 ? ` · 🔥 ${streakData.currentStreak}-Day Streak` : '';
@@ -117,6 +122,28 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
               <span>
                 Ranked #{rank} among {players} players today
               </span>
+            </div>
+          )}
+
+          {/* Beat-your-own-score comparison */}
+          {hasComparison && (
+            <div className="pt-3 border-t border-slate-800/80 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold">
+              {scoreDelta > 0 ? (
+                <>
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-400">+{scoreDelta.toLocaleString()} vs your last Daily Challenge</span>
+                </>
+              ) : scoreDelta < 0 ? (
+                <>
+                  <TrendingDown className="w-4 h-4 text-rose-400" />
+                  <span className="text-rose-400">{scoreDelta.toLocaleString()} vs your last Daily Challenge</span>
+                </>
+              ) : (
+                <>
+                  <Minus className="w-4 h-4 text-slate-400" />
+                  <span className="text-slate-400">Tied your last Daily Challenge</span>
+                </>
+              )}
             </div>
           )}
         </div>
