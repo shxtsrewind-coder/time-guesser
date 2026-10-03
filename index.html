@@ -16,8 +16,91 @@
     <link rel="preconnect" href="https://pfxmswdwosimghjaggsk.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://pfxmswdwosimghjaggsk.supabase.co">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400..600&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!--
+      Critical, inline boot styles. These paint immediately from the raw HTML —
+      before the JS bundle downloads/parses, before Tailwind's generated CSS
+      loads, before web fonts arrive — so the very first frame is the dark
+      "When & Where" background and a loading mark instead of a flash of
+      blank/white. #initial-loader is removed once React has mounted (see
+      src/main.tsx); everything here is intentionally duplicated as plain CSS
+      so it has zero dependency on anything else loading first.
+    -->
+    <style>
+      html, body {
+        background-color: #090d16;
+      }
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background-color: #090d16;
+        background-image: radial-gradient(circle at 50% 0%, #151d32 0%, #090d16 55%, #060911 100%);
+        transition: opacity 0.25s ease;
+      }
+      #initial-loader.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #initial-loader .wwr-loader-mark {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-family: 'Cinzel', Georgia, serif;
+        font-weight: 700;
+        font-size: 28px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      #initial-loader .wwr-loader-mark .amber { color: #f5b23c; }
+      #initial-loader .wwr-loader-mark .cyan { color: #38d9e8; }
+      #initial-loader .wwr-loader-mark .amp {
+        font-family: Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 18px;
+        color: #5b6372;
+        margin: 0 2px;
+      }
+      #initial-loader .wwr-loader-spinner {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2.5px solid rgba(245, 178, 60, 0.25);
+        border-top-color: #f5b23c;
+        animation: wwr-spin 0.7s linear infinite;
+      }
+      #initial-loader .wwr-loader-caption {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #6b7280;
+      }
+      @keyframes wwr-spin {
+        to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #initial-loader .wwr-loader-spinner {
+          animation-duration: 1.4s;
+        }
+      }
+    </style>
   </head>
   <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-900/60 selection:text-cyan-200">
+    <div id="initial-loader" aria-live="polite" aria-label="Loading When &amp; Where">
+      <div class="wwr-loader-mark">
+        <span class="amber">WHEN</span>
+        <span class="amp">&amp;</span>
+        <span class="cyan">WHERE</span>
+      </div>
+      <div class="wwr-loader-spinner" role="status"></div>
+      <div class="wwr-loader-caption">Opening the archive&hellip;</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
