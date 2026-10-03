@@ -226,6 +226,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   src={roundInfo.image_url}
                   alt="Archival photograph"
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}
@@ -460,6 +463,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   src={roundInfo.image_url}
                   alt="Archival photograph"
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}

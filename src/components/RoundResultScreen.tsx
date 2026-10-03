@@ -157,6 +157,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
               src={imageUrl}
               alt={caption || 'Archival photo result'}
               referrerPolicy="no-referrer"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               onClick={() => setIsLightboxOpen(true)}
               className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
             />
@@ -188,6 +191,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
             src={imageUrl}
             alt={caption || 'Archival photo result'}
             referrerPolicy="no-referrer"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
             onClick={() => setIsLightboxOpen(true)}
             className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
           />

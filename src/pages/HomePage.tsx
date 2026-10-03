@@ -38,7 +38,11 @@ export const HomePage: React.FC<HomePageProps> = ({
 
     if (result) {
       navigate(`/play/${result.gameId}/round/${result.startingRound}`);
-    } else if (mode === 'daily') {
+    } else if (mode === 'daily' && isDailyCompletedToday()) {
+      // Only show the "already played" lock screen when that's actually why
+      // it failed (GameContext sets this flag specifically for that error).
+      // Any other failure — a network blip, rate limiting — should surface
+      // the real error banner below instead, so the player can retry.
       setDailyPlayedNotice(true);
     }
   };

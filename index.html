@@ -11,6 +11,10 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Photos are served from Supabase Storage on every round; warm the connection early so the
+         first image fetch skips DNS + TLS setup instead of paying for it on the critical path. -->
+    <link rel="preconnect" href="https://pfxmswdwosimghjaggsk.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="https://pfxmswdwosimghjaggsk.supabase.co">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400..600&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-900/60 selection:text-cyan-200">

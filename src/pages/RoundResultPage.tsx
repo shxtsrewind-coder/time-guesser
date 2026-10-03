@@ -82,12 +82,21 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
   const roundInfo = useMemo(() => rounds.find((r) => r.round_no === roundNo), [rounds, roundNo]);
   const isLastRound = roundNo >= 5 || (roundInfo && roundNo >= rounds.length);
 
-  // 2. Preload next round photo on mount
+  // 2. Preload next round photo on mount. Low priority: this screen's own
+  // photo is already cached (it was fully loaded during Round play), so the
+  // bandwidth here should go to the next round's photo without starving
+  // anything currently on screen.
   useEffect(() => {
     if (roundNo < 5 && rounds.length > 0) {
       const nextRound = rounds.find((r) => r.round_no === roundNo + 1);
       if (nextRound?.image_url) {
         const img = new Image();
+        try {
+          (img as any).fetchPriority = 'low';
+        } catch {
+          // ignore
+        }
+        img.decoding = 'async';
         img.src = nextRound.image_url;
       }
     }
@@ -317,6 +326,9 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
                   src={roundInfo.image_url}
                   alt={caption || 'Archival photograph'}
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onClick={() => setIsLightboxOpen(true)}
                   className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
                 />
@@ -364,6 +376,9 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
               src={roundInfo.image_url}
               alt={caption || 'Archival photograph'}
               referrerPolicy="no-referrer"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               onClick={() => setIsLightboxOpen(true)}
               className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
             />
@@ -510,7 +525,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
             type="button"
             disabled={isFinishing}
             onClick={handleNextAction}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 active:scale-[0.98] text-stone-950 font-bold text-base shadow-xl shadow-amber-950/60 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
+            className="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 active:scale-[0.98] text-stone-950 font-bold text-base shadow-lg shadow-amber-500/20 transition-all duration-200 flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
           >
             {isFinishing ? (
               <>
