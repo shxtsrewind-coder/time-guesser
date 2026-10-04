@@ -184,9 +184,15 @@ function AppLayout() {
     };
   }, [syncUserProfile]);
 
+  // Remove-Ads purchasing is disabled for this deploy: it depends on the
+  // Express/Stripe backend in server.ts, which isn't running on a static
+  // host. Every "Remove Ads" entry point in the app funnels through this
+  // one callback, so redirecting it here (instead of opening the paid
+  // checkout modal) disables the whole flow without touching every
+  // component that renders a Remove Ads button/banner.
   const handleOpenRemoveAds = useCallback(() => {
-    setIsRemoveAdsOpen(true);
-  }, []);
+    showSuccessToast('Ad-free removal is coming soon — thanks for your patience!');
+  }, [showSuccessToast]);
 
   const handleOpenAuthModal = useCallback((mode: AuthModalMode = 'choice') => {
     setAuthModalMode(mode);
