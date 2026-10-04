@@ -254,7 +254,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
             <button
               type="button"
               onClick={onOpenSaveProgress}
-              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-xs inline-flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer active:scale-95"
+              className="py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 text-slate-950 font-bold text-xs inline-flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md cursor-pointer active:scale-95"
             >
               <span>How do you want to play?</span>
             </button>
@@ -264,7 +264,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         <button
           type="button"
           onClick={handleShare}
-          className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
         >
           {copied ? (
             <>

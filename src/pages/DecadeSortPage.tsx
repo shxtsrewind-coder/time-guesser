@@ -450,6 +450,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                           <img
                             src={fullUrl}
                             alt={item.caption}
+                            loading="eager"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -520,6 +522,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                           <img
                             src={fullUrl}
                             alt={correctItem?.caption || 'Photo'}
+                            loading="eager"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -690,6 +694,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                       <img
                         src={fullUrl}
                         alt="Historical photograph"
+                        loading="eager"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">

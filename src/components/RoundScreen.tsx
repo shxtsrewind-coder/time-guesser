@@ -226,6 +226,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   src={roundInfo.image_url}
                   alt="Archival photograph"
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}
@@ -381,7 +384,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         onClick={() => setGuessWeekday(day.id)}
                         className={`py-2 px-0 rounded-lg xs:rounded-xl text-[10px] xs:text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer min-w-0 ${
                           isSelected
-                            ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-950/50 ring-2 ring-purple-300 scale-[1.03]'
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/40 ring-1 ring-indigo-400/50'
                             : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
                         }`}
                       >
@@ -401,7 +404,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 disabled={!isReadyToLockIn}
                 onClick={handleSubmit}
-                className="w-full py-3.5 sm:py-4 px-5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
+                className="w-full py-3.5 sm:py-4 px-5 rounded-2xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 text-slate-950 font-bold text-base shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -460,6 +463,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                   src={roundInfo.image_url}
                   alt="Archival photograph"
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   onClick={() => setIsLightboxOpen(true)}
@@ -587,7 +593,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         onClick={() => setGuessWeekday(day.id)}
                         className={`py-2.5 px-1 rounded-xl text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
                           isSelected
-                            ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-950/50 ring-2 ring-purple-300 scale-[1.03]'
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/40 ring-1 ring-indigo-400/50'
                             : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
                         }`}
                       >
@@ -605,7 +611,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 disabled={!isReadyToLockIn}
                 onClick={handleSubmit}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
+                className="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 text-slate-950 font-bold text-base shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none cursor-pointer"
               >
                 {isSubmitting ? (
                   <>

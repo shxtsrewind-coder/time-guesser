@@ -42,7 +42,7 @@ export async function parseSupabaseError(error: any): Promise<string> {
   const rawCode = (code || error.message || error.code || '').toLowerCase();
 
   if (rawCode.includes('daily_already_played')) {
-    return "daily_already_played: You've already completed today's Daily Challenge! Classic mode is ready for you.";
+    return "daily_already_played: You've already completed today's Daily Challenge! Decade Sort is ready for you.";
   }
   if (rawCode.includes('rate_limited')) {
     return "Too many requests. Please catch your breath and try again in a few moments.";
@@ -51,7 +51,7 @@ export async function parseSupabaseError(error: any): Promise<string> {
     return "Not enough archival photos available right now. Please try again shortly.";
   }
   if (rawCode.includes('no_daily_challenge')) {
-    return "Today's daily challenge is not available yet. Try Classic mode in the meantime!";
+    return "Today's daily challenge is not available yet. Try Decade Sort in the meantime!";
   }
   if (rawCode.includes('already_answered')) {
     return "This round has already been answered.";

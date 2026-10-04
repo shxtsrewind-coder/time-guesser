@@ -216,13 +216,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* Hero Header with Dual-Accent Presence */}
       <div className="text-center space-y-2 sm:space-y-3 pt-1 sm:pt-2">
         <h1 className="text-3xl xs:text-5xl sm:text-6xl font-black font-cinzel tracking-wider uppercase select-none flex items-center justify-center flex-wrap gap-x-2.5 sm:gap-x-3 gap-y-1">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-300 to-amber-500 drop-shadow-md">
+          <span className="text-amber-400">
             WHEN
           </span>
-          <span className="text-slate-500 font-serif-display italic font-normal text-2xl xs:text-4xl sm:text-5xl mx-0.5">
+          <span className="text-slate-500 font-serif-display font-normal text-2xl xs:text-4xl sm:text-5xl mx-0.5">
             &amp;
           </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-emerald-400 drop-shadow-md">
+          <span className="text-cyan-400">
             WHERE
           </span>
         </h1>
@@ -353,9 +353,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               type="button"
               disabled={isLoading}
               onClick={() => onStartGame('daily')}
-              className="w-full relative group overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 p-[1px] shadow-xl shadow-amber-950/20 active:scale-[0.99] transition-transform disabled:opacity-60 text-left cursor-pointer"
+              className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#0b1120] border border-amber-500/25 hover:border-amber-400/50 shadow-xl shadow-amber-950/20 active:scale-[0.99] disabled:opacity-60 text-left cursor-pointer"
             >
-              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl bg-[#0b1120] group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
+              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                     <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -388,9 +388,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             type="button"
             onClick={onOpenDecadeSort}
-            className="w-full relative group overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-400 to-indigo-500 p-[1px] shadow-xl shadow-cyan-950/20 active:scale-[0.99] transition-transform text-left cursor-pointer"
+            className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#0b1120] border border-cyan-500/25 hover:border-cyan-400/50 shadow-xl shadow-cyan-950/20 active:scale-[0.99] text-left cursor-pointer"
           >
-            <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl bg-[#0b1120] group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
+            <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
                   <ArrowUpDown className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />

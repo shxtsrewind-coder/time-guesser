@@ -37,10 +37,49 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 const STORAGE_PREFIX = 'timeguess_game_';
 
-const preloadImageUrl = (url: string) => {
+const preloadImageUrl = (url: string, priority: 'high' | 'low' = 'high') => {
   if (!url) return;
   const img = new Image();
+  // Background prefetches must not compete with the image the player is
+  // actually waiting on right now — without this every preload races the
+  // visible round's photo for bandwidth at equal priority, which is why
+  // the "current" photo could take forever even though it was the only
+  // one the player needed immediately.
+  try {
+    (img as any).fetchPriority = priority;
+  } catch {
+    // Older browsers without fetchPriority support just ignore this.
+  }
+  img.decoding = 'async';
   img.src = url;
+};
+
+// Preload the round(s) the player is about to see at full priority, and push
+// everything further out to a low-priority prefetch once the browser is idle
+// so a 5-photo game doesn't open five equal-priority requests at once and
+// starve the very first photo the player is staring at.
+const preloadRounds = (allRounds: RoundInfo[], fromRoundNo: number) => {
+  const sorted = [...allRounds].sort((a, b) => a.round_no - b.round_no);
+  const upcoming = sorted.filter((r) => r.round_no >= fromRoundNo);
+  const [immediate, ...rest] = upcoming;
+  if (immediate?.image_url) preloadImageUrl(immediate.image_url, 'high');
+
+  const next = rest[0];
+  if (next?.image_url) preloadImageUrl(next.image_url, 'high');
+
+  const later = rest.slice(1);
+  if (later.length === 0) return;
+
+  const schedule =
+    typeof window !== 'undefined' && 'requestIdleCallback' in window
+      ? (cb: () => void) => (window as any).requestIdleCallback(cb, { timeout: 2000 })
+      : (cb: () => void) => setTimeout(cb, 300);
+
+  schedule(() => {
+    later.forEach((r) => {
+      if (r.image_url) preloadImageUrl(r.image_url, 'low');
+    });
+  });
 };
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -105,8 +144,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setMaxTotalScore(data.maxTotalScore || 25000);
         setIsGameFinished(Boolean(data.isGameFinished));
 
-        // Preload all round images immediately
-        data.rounds?.forEach((r) => preloadImageUrl(r.image_url));
+        // Preload the current and upcoming round images, current round first
+        const resumeFrom = (data.rounds || []).find((r) => !data.results?.[r.round_no])?.round_no ?? 1;
+        if (data.rounds?.length) preloadRounds(data.rounds, resumeFrom);
         return true;
       }
     } catch (e) {
@@ -153,7 +193,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             computedMax,
             false
           );
-          data.rounds.forEach((r: RoundInfo) => preloadImageUrl(r.image_url));
+          const resumeFrom = Math.max(1, Math.min(data.rounds.length, data.current_round || 1));
+          preloadRounds(data.rounds, resumeFrom);
           return true;
         }
       } catch (err) {
@@ -220,13 +261,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           }
         }
 
-        // Preload all round photographs in background
-        newRounds.forEach((r) => preloadImageUrl(r.image_url));
-
         let startingRound = 1;
         if (data.resumed && data.current_round) {
           startingRound = Math.max(1, Math.min(newRounds.length, data.current_round));
         }
+
+        // Preload the starting round + the next one at full priority; the rest
+        // trickle in at low priority once the browser is idle (see preloadRounds).
+        preloadRounds(newRounds, startingRound);
 
         const computedMax = newRounds.reduce((sum, r) => sum + (r.max_score || 5000), 0);
 

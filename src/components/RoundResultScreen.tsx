@@ -157,6 +157,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
               src={imageUrl}
               alt={caption || 'Archival photo result'}
               referrerPolicy="no-referrer"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               onClick={() => setIsLightboxOpen(true)}
               className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
             />
@@ -188,6 +191,9 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
             src={imageUrl}
             alt={caption || 'Archival photo result'}
             referrerPolicy="no-referrer"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
             onClick={() => setIsLightboxOpen(true)}
             className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
           />
@@ -332,7 +338,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
           type="button"
           disabled={isLoadingNext}
           onClick={onProceed}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:brightness-110 active:scale-[0.98] text-slate-950 font-bold text-base shadow-xl shadow-amber-950/30 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
+          className="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 active:bg-amber-500 active:scale-[0.98] text-slate-950 font-bold text-base shadow-lg shadow-amber-500/20 transition-all duration-200 flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
         >
           {isLoadingNext ? (
             <div className="w-5 h-5 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />
