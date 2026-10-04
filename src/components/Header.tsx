@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">
               When
             </span>
-            <span className="text-slate-400 font-serif-display italic text-base xs:text-lg sm:text-xl mx-1 font-normal">
+            <span className="text-slate-400 font-cinzel text-lg xs:text-xl sm:text-2xl mx-1 font-black">
               &amp;
             </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-emerald-400">
