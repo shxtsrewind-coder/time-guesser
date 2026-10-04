@@ -3,12 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>When & Where</title>
-    <meta name="description" content="Cinematic historical photograph deduction game. Pinpoint the year and location across archival challenges." />
-    <meta property="og:title" content="When & Where" />
-    <meta property="og:description" content="Cinematic historical photograph deduction game. Pinpoint the year and location across archival challenges." />
+
+    <!-- Primary SEO -->
+    <title>When & Where — Daily Historical Photo Guessing Game</title>
+    <meta name="description" content="Guess the year, the place, and the day of the week from real archival photographs. A new free Daily Challenge every day, plus unlimited Decade Sort rounds." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://whenandwhere.bgameworld.com/" />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="author" content="bgameworld.com" />
+
+    <!-- Open Graph (Facebook, LinkedIn, Discord, WhatsApp, ...) -->
+    <meta property="og:site_name" content="When & Where" />
+    <meta property="og:title" content="When & Where — Daily Historical Photo Guessing Game" />
+    <meta property="og:description" content="Guess the year, the place, and the day of the week from real archival photographs. A new free Daily Challenge every day, plus unlimited Decade Sort rounds." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://whenandwhere.bgameworld.com/" />
+    <meta property="og:image" content="https://whenandwhere.bgameworld.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="When & Where — pin the year, pin the place, prove it." />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="When & Where — Daily Historical Photo Guessing Game" />
+    <meta name="twitter:description" content="Guess the year, the place, and the day of the week from real archival photographs. A new free Daily Challenge every day." />
+    <meta name="twitter:image" content="https://whenandwhere.bgameworld.com/og-image.png" />
+
+    <!-- Icons & manifest -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Structured data: lets Google show this as a game, not a generic page -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "When & Where",
+        "url": "https://whenandwhere.bgameworld.com/",
+        "image": "https://whenandwhere.bgameworld.com/og-image.png",
+        "description": "Guess the year, the place, and the day of the week from real archival photographs. A new free Daily Challenge every day, plus unlimited Decade Sort rounds.",
+        "genre": ["Puzzle", "Trivia", "Geography", "History"],
+        "applicationCategory": "Game",
+        "operatingSystem": "Any (Web Browser)",
+        "isAccessibleForFree": true,
+        "publisher": {
+          "@type": "Organization",
+          "name": "bgameworld.com",
+          "url": "https://bgameworld.com/"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Photos are served from Supabase Storage on every round; warm the connection early so the

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://whenandwhere.bgameworld.com/sitemap.xml
