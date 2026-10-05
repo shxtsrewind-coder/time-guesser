@@ -26,6 +26,10 @@ import {
   X,
   Lock,
   LogOut,
+  TrendingUp,
+  Trophy,
+  Target,
+  Globe2,
 } from 'lucide-react';
 
 interface AdminStats {
@@ -115,6 +119,42 @@ interface PhotoInsightsData {
     is_active?: boolean;
   }>;
   [key: string]: any;
+}
+
+interface ActivityTrendPoint {
+  day: string;
+  classic_games: number;
+  daily_games: number;
+  decade_sort_games: number;
+}
+
+interface FunnelRow {
+  mode: string;
+  started: number;
+  finished: number;
+}
+
+interface LeaderboardRow {
+  display_name?: string;
+  country_code?: string | null;
+  is_banned?: boolean;
+  daily_best_score?: number;
+  daily_streak?: number;
+  decade_sort_best_score?: number;
+  decade_sort_streak?: number;
+}
+
+interface AccuracyStats {
+  avg_year_score?: number | null;
+  avg_location_score?: number | null;
+  avg_weekday_score?: number | null;
+  avg_distance_km?: number | null;
+  rounds_counted?: number;
+}
+
+interface CountryRow {
+  country_code: string;
+  player_count: number;
 }
 
 // -------------------------------------------------------------
@@ -375,6 +415,154 @@ const PhotoRowEditor: React.FC<{
 };
 
 // -------------------------------------------------------------
+// ActivityTrendChart: inline SVG line chart, no external chart lib.
+// 3 series (classic / daily / decade sort), hover crosshair + tooltip.
+// Colors: validated 3-slot categorical palette (blue/orange/aqua) on
+// the dark stone-950 surface (passes CVD + normal-vision separation).
+// -------------------------------------------------------------
+const TREND_SERIES = [
+  { key: 'classic_games' as const, label: 'Classic', color: '#3987e5' },
+  { key: 'daily_games' as const, label: 'Daily', color: '#d95926' },
+  { key: 'decade_sort_games' as const, label: 'Decade Sort', color: '#199e70' },
+];
+
+const ActivityTrendChart: React.FC<{
+  data: ActivityTrendPoint[];
+  hoverIdx: number | null;
+  onHoverIdx: (idx: number | null) => void;
+}> = ({ data, hoverIdx, onHoverIdx }) => {
+  const width = 760;
+  const height = 220;
+  const padL = 32;
+  const padR = 12;
+  const padT = 12;
+  const padB = 24;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+
+  if (data.length === 0) {
+    return (
+      <div className="p-6 text-center bg-stone-950 border border-stone-800 rounded-lg text-xs text-stone-400">
+        No activity recorded in this period yet.
+      </div>
+    );
+  }
+
+  const maxVal = Math.max(
+    1,
+    ...data.flatMap((d) => [d.classic_games, d.daily_games, d.decade_sort_games])
+  );
+  const n = data.length;
+  const xAt = (i: number) => padL + (n === 1 ? 0 : (i / (n - 1)) * plotW);
+  const yAt = (v: number) => padT + plotH - (v / maxVal) * plotH;
+
+  const pathFor = (key: keyof ActivityTrendPoint) =>
+    data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xAt(i).toFixed(1)} ${yAt(Number(d[key])).toFixed(1)}`).join(' ');
+
+  const gridLines = [0, 0.5, 1];
+  const hovered = hoverIdx !== null ? data[hoverIdx] : null;
+
+  return (
+    <div className="relative">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto select-none"
+        role="img"
+        aria-label="Games played per day, last 30 days, split by mode"
+        onMouseLeave={() => onHoverIdx(null)}
+        onMouseMove={(e) => {
+          const rect = (e.target as SVGElement).closest('svg')!.getBoundingClientRect();
+          const relX = ((e.clientX - rect.left) / rect.width) * width;
+          const idx = Math.round(((relX - padL) / plotW) * (n - 1));
+          onHoverIdx(Math.min(Math.max(idx, 0), n - 1));
+        }}
+      >
+        {/* Gridlines + y labels */}
+        {gridLines.map((g) => {
+          const y = padT + plotH - g * plotH;
+          return (
+            <g key={g}>
+              <line x1={padL} x2={width - padR} y1={y} y2={y} stroke="#292524" strokeWidth={1} />
+              <text x={padL - 6} y={y + 3} textAnchor="end" fontSize={9} fill="#78716c" fontFamily="monospace">
+                {Math.round(g * maxVal)}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Series lines */}
+        {TREND_SERIES.map((s) => (
+          <path key={s.key} d={pathFor(s.key)} fill="none" stroke={s.color} strokeWidth={2} strokeLinejoin="round" />
+        ))}
+
+        {/* X-axis start/end date labels */}
+        <text x={padL} y={height - 6} fontSize={9} fill="#78716c" fontFamily="monospace">
+          {data[0]?.day}
+        </text>
+        <text x={width - padR} y={height - 6} textAnchor="end" fontSize={9} fill="#78716c" fontFamily="monospace">
+          {data[n - 1]?.day}
+        </text>
+
+        {/* Hover crosshair */}
+        {hoverIdx !== null && (
+          <>
+            <line
+              x1={xAt(hoverIdx)}
+              x2={xAt(hoverIdx)}
+              y1={padT}
+              y2={padT + plotH}
+              stroke="#57534e"
+              strokeWidth={1}
+              strokeDasharray="3,3"
+            />
+            {TREND_SERIES.map((s) => (
+              <circle
+                key={s.key}
+                cx={xAt(hoverIdx)}
+                cy={yAt(Number(data[hoverIdx][s.key]))}
+                r={3.5}
+                fill={s.color}
+                stroke="#0c0a09"
+                strokeWidth={1.5}
+              />
+            ))}
+          </>
+        )}
+      </svg>
+
+      {/* Tooltip */}
+      {hovered && (
+        <div
+          className="absolute top-1 pointer-events-none bg-stone-900 border border-stone-700 rounded-md px-2.5 py-1.5 text-[11px] shadow-xl"
+          style={{
+            left: `${Math.min(Math.max((xAt(hoverIdx!) / width) * 100, 12), 82)}%`,
+          }}
+        >
+          <div className="text-stone-400 font-mono mb-1">{hovered.day}</div>
+          {TREND_SERIES.map((s) => (
+            <div key={s.key} className="flex items-center gap-1.5 font-mono">
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
+              <span className="text-stone-300">{s.label}:</span>
+              <span className="text-stone-100 font-bold">{hovered[s.key]}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="flex items-center gap-4 mt-2 flex-wrap">
+        {TREND_SERIES.map((s) => (
+          <div key={s.key} className="flex items-center gap-1.5 text-[11px] text-stone-400">
+            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: s.color }} />
+            <span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// -------------------------------------------------------------
 // Main AdminPage Component
 // -------------------------------------------------------------
 export const AdminPage: React.FC = () => {
@@ -393,8 +581,10 @@ export const AdminPage: React.FC = () => {
   const [loginSubmitting, setLoginSubmitting] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  // Active Tab: reports, photos, upload, users, insights
-  const [activeTab, setActiveTab] = useState<'reports' | 'photos' | 'upload' | 'users' | 'insights'>('reports');
+  // Active Tab: reports, photos, upload, users, insights, analytics
+  const [activeTab, setActiveTab] = useState<
+    'reports' | 'photos' | 'upload' | 'users' | 'insights' | 'analytics'
+  >('reports');
 
   // Reports state
   const [reports, setReports] = useState<ReportItem[]>([]);
@@ -448,6 +638,19 @@ export const AdminPage: React.FC = () => {
   const [insights, setInsights] = useState<PhotoInsightsData | null>(null);
   const [insightsLoading, setInsightsLoading] = useState(false);
   const [insightsError, setInsightsError] = useState<string | null>(null);
+
+  // Analytics tab state
+  const [activityTrend, setActivityTrend] = useState<ActivityTrendPoint[]>([]);
+  const [completionFunnel, setCompletionFunnel] = useState<FunnelRow[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardRow[]>([]);
+  const [accuracyStats, setAccuracyStats] = useState<AccuracyStats | null>(null);
+  const [countryBreakdown, setCountryBreakdown] = useState<CountryRow[]>([]);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+  const [leaderboardSort, setLeaderboardSort] = useState<
+    'combined' | 'daily_best_score' | 'decade_sort_best_score' | 'daily_streak' | 'decade_sort_streak'
+  >('combined');
+  const [hoverTrendIdx, setHoverTrendIdx] = useState<number | null>(null);
   const [insightActionLoading, setInsightActionLoading] = useState<Record<string, boolean>>({});
 
   // Checks whether the current Supabase session belongs to an admin.
@@ -659,6 +862,37 @@ export const AdminPage: React.FC = () => {
     }
   }, []);
 
+  // 6. Load Analytics (activity trend, completion funnel, leaderboard, accuracy, countries)
+  const loadAnalytics = useCallback(async () => {
+    setAnalyticsLoading(true);
+    setAnalyticsError(null);
+    try {
+      const [trendRes, funnelRes, boardRes, accuracyRes, countryRes] = await Promise.all([
+        supabase.rpc('admin_activity_trend', { days_back: 30 }),
+        supabase.rpc('admin_completion_funnel'),
+        supabase.rpc('admin_leaderboard', { board_limit: 100 }),
+        supabase.rpc('admin_accuracy_stats'),
+        supabase.rpc('admin_country_breakdown'),
+      ]);
+      const firstError =
+        trendRes.error || funnelRes.error || boardRes.error || accuracyRes.error || countryRes.error;
+      if (firstError) throw firstError;
+
+      setActivityTrend(Array.isArray(trendRes.data) ? trendRes.data : []);
+      setCompletionFunnel(Array.isArray(funnelRes.data) ? funnelRes.data : []);
+      setLeaderboard(Array.isArray(boardRes.data) ? boardRes.data : []);
+      const accObj = Array.isArray(accuracyRes.data) ? accuracyRes.data[0] : accuracyRes.data;
+      setAccuracyStats(accObj ?? null);
+      setCountryBreakdown(Array.isArray(countryRes.data) ? countryRes.data : []);
+    } catch (err: any) {
+      console.error('Failed to load analytics:', err);
+      const parsedMsg = await parseSupabaseError(err);
+      setAnalyticsError(parsedMsg || err.message || 'Failed to load analytics. Please try again.');
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  }, []);
+
   // Trigger loads when active tab changes
   useEffect(() => {
     if (!isAuthorized) return;
@@ -670,8 +904,10 @@ export const AdminPage: React.FC = () => {
       loadUsers();
     } else if (activeTab === 'insights') {
       loadInsights();
+    } else if (activeTab === 'analytics') {
+      loadAnalytics();
     }
-  }, [isAuthorized, activeTab, loadReports, loadPhotos, loadUsers, loadInsights]);
+  }, [isAuthorized, activeTab, loadReports, loadPhotos, loadUsers, loadInsights, loadAnalytics]);
 
   // -------------------------------------------------------------
   // Reports Actions
@@ -1309,6 +1545,19 @@ export const AdminPage: React.FC = () => {
         >
           <BarChart3 className="w-3.5 h-3.5" />
           <span>Insights</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('analytics')}
+          className={`py-2 px-4 rounded-lg text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
+            activeTab === 'analytics'
+              ? 'bg-amber-600 text-stone-950 font-bold'
+              : 'bg-stone-900 hover:bg-stone-850 text-stone-300 border border-stone-800'
+          }`}
+        >
+          <TrendingUp className="w-3.5 h-3.5" />
+          <span>Analytics</span>
         </button>
       </div>
 
@@ -2252,6 +2501,237 @@ export const AdminPage: React.FC = () => {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* 6. Analytics Tab Content */}
+      {activeTab === 'analytics' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-bold text-stone-200">Player Analytics</h2>
+              <p className="text-xs text-stone-400">Activity, completion, leaderboard and accuracy across all players</p>
+            </div>
+            <button
+              type="button"
+              onClick={loadAnalytics}
+              disabled={analyticsLoading}
+              className="py-1 px-2.5 rounded bg-stone-900 hover:bg-stone-850 border border-stone-700 text-stone-300 text-xs flex items-center gap-1.5 cursor-pointer"
+            >
+              <RotateCcw className={`w-3.5 h-3.5 ${analyticsLoading ? 'animate-spin' : ''}`} />
+              <span>Reload Analytics</span>
+            </button>
+          </div>
+
+          {analyticsError && (
+            <div className="p-4 bg-rose-950/40 border border-rose-800/80 rounded-lg flex items-center justify-between gap-3 text-xs text-rose-200">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{analyticsError}</span>
+              </div>
+              <button
+                type="button"
+                onClick={loadAnalytics}
+                className="py-1 px-2.5 rounded bg-rose-900 hover:bg-rose-850 text-rose-100 font-semibold cursor-pointer"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
+          {analyticsLoading && activityTrend.length === 0 && !accuracyStats ? (
+            <div className="py-8 text-center text-xs text-stone-400">Loading analytics...</div>
+          ) : (
+            <>
+              {/* Activity Trend */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold font-mono uppercase text-stone-400 tracking-wider flex items-center gap-1.5">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  Activity — Last 30 Days
+                </h3>
+                <div className="p-4 bg-stone-950 border border-stone-800 rounded-lg">
+                  <ActivityTrendChart data={activityTrend} hoverIdx={hoverTrendIdx} onHoverIdx={setHoverTrendIdx} />
+                </div>
+              </div>
+
+              {/* Completion Funnel */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold font-mono uppercase text-stone-400 tracking-wider flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5" />
+                  Completion Funnel
+                </h3>
+                <div className="p-4 bg-stone-950 border border-stone-800 rounded-lg space-y-3">
+                  {completionFunnel.length === 0 ? (
+                    <div className="text-xs text-stone-400 text-center py-2">No games recorded yet.</div>
+                  ) : (
+                    completionFunnel.map((row) => {
+                      const series = TREND_SERIES.find((s) => s.key.startsWith(row.mode)) ?? TREND_SERIES[0];
+                      const pct = row.started > 0 ? Math.round((row.finished / row.started) * 100) : 0;
+                      const modeLabel =
+                        row.mode === 'classic' ? 'Classic' : row.mode === 'daily' ? 'Daily Challenge' : 'Decade Sort';
+                      return (
+                        <div key={row.mode} className="space-y-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="flex items-center gap-1.5 text-stone-300 font-medium">
+                              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: series.color }} />
+                              {modeLabel}
+                            </span>
+                            <span className="font-mono text-stone-400">
+                              {row.finished} / {row.started} finished ({pct}%)
+                            </span>
+                          </div>
+                          <div className="h-2 rounded-full bg-stone-800 overflow-hidden">
+                            <div
+                              className="h-full rounded-full"
+                              style={{ width: `${pct}%`, background: series.color }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              {/* Accuracy + Country breakdown, side by side */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold font-mono uppercase text-stone-400 tracking-wider flex items-center gap-1.5">
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    Guess Accuracy
+                  </h3>
+                  <div className="p-4 bg-stone-950 border border-stone-800 rounded-lg grid grid-cols-2 gap-3">
+                    {[
+                      { label: 'Avg Year Score', value: accuracyStats?.avg_year_score, suffix: '' },
+                      { label: 'Avg Location Score', value: accuracyStats?.avg_location_score, suffix: '' },
+                      { label: 'Avg Weekday Score', value: accuracyStats?.avg_weekday_score, suffix: '' },
+                      { label: 'Avg Guess Distance', value: accuracyStats?.avg_distance_km, suffix: ' km' },
+                    ].map((tile) => (
+                      <div key={tile.label} className="p-3 bg-stone-900/60 border border-stone-800 rounded-lg">
+                        <div className="text-[10px] uppercase font-mono text-stone-500 tracking-wider">
+                          {tile.label}
+                        </div>
+                        <div className="text-lg font-bold font-mono text-amber-400 mt-0.5">
+                          {tile.value != null ? `${tile.value}${tile.suffix}` : '—'}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="col-span-2 text-[11px] text-stone-500 pt-1">
+                      Across {(accuracyStats?.rounds_counted ?? 0).toLocaleString()} scored rounds
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold font-mono uppercase text-stone-400 tracking-wider flex items-center gap-1.5">
+                    <Globe2 className="w-3.5 h-3.5" />
+                    Players by Country
+                  </h3>
+                  <div className="p-4 bg-stone-950 border border-stone-800 rounded-lg space-y-2">
+                    {countryBreakdown.length === 0 ? (
+                      <div className="text-xs text-stone-400 text-center py-2">No country data yet.</div>
+                    ) : (
+                      (() => {
+                        const maxCount = Math.max(...countryBreakdown.map((c) => c.player_count), 1);
+                        return countryBreakdown.slice(0, 10).map((c) => (
+                          <div key={c.country_code} className="flex items-center gap-2 text-xs">
+                            <span className="w-8 shrink-0 font-mono text-stone-300">{c.country_code}</span>
+                            <div className="flex-1 h-2 rounded-full bg-stone-800 overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-amber-500"
+                                style={{ width: `${(c.player_count / maxCount) * 100}%` }}
+                              />
+                            </div>
+                            <span className="w-8 text-right shrink-0 font-mono text-stone-400">
+                              {c.player_count}
+                            </span>
+                          </div>
+                        ));
+                      })()
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Leaderboard */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold font-mono uppercase text-stone-400 tracking-wider flex items-center gap-1.5">
+                  <Trophy className="w-3.5 h-3.5" />
+                  Leaderboard
+                </h3>
+                <div className="border border-stone-800 rounded-lg overflow-x-auto bg-stone-950">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-stone-800 bg-stone-900/60 text-[11px] font-mono uppercase text-stone-400">
+                        <th className="p-3">#</th>
+                        <th className="p-3">Player</th>
+                        <th className="p-3">Country</th>
+                        {[
+                          { key: 'daily_best_score' as const, label: 'Daily Best' },
+                          { key: 'daily_streak' as const, label: 'Daily Streak' },
+                          { key: 'decade_sort_best_score' as const, label: 'Decade Best' },
+                          { key: 'decade_sort_streak' as const, label: 'Decade Streak' },
+                        ].map((col) => (
+                          <th
+                            key={col.key}
+                            className="p-3 text-right cursor-pointer hover:text-amber-400 select-none"
+                            onClick={() => setLeaderboardSort(col.key)}
+                          >
+                            {col.label}
+                            {leaderboardSort === col.key && ' ▾'}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-850 text-xs">
+                      {leaderboard.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="p-6 text-center text-stone-400">
+                            No players yet.
+                          </td>
+                        </tr>
+                      ) : (
+                        [...leaderboard]
+                          .sort((a, b) => {
+                            if (leaderboardSort === 'combined') {
+                              return (
+                                (b.daily_best_score ?? 0) +
+                                (b.decade_sort_best_score ?? 0) -
+                                ((a.daily_best_score ?? 0) + (a.decade_sort_best_score ?? 0))
+                              );
+                            }
+                            return (b[leaderboardSort] ?? 0) - (a[leaderboardSort] ?? 0);
+                          })
+                          .slice(0, 25)
+                          .map((p, idx) => (
+                            <tr key={`${p.display_name}-${idx}`} className="hover:bg-stone-900/40">
+                              <td className="p-3 font-mono text-stone-500">{idx + 1}</td>
+                              <td className="p-3 text-stone-200 font-medium">
+                                {p.display_name || 'Player'}
+                                {p.is_banned && (
+                                  <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-rose-950 border border-rose-800 text-rose-300">
+                                    Banned
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-3 font-mono text-stone-400">{p.country_code || '—'}</td>
+                              <td className="p-3 text-right font-mono text-stone-200">{p.daily_best_score ?? 0}</td>
+                              <td className="p-3 text-right font-mono text-stone-200">{p.daily_streak ?? 0}</td>
+                              <td className="p-3 text-right font-mono text-stone-200">
+                                {p.decade_sort_best_score ?? 0}
+                              </td>
+                              <td className="p-3 text-right font-mono text-stone-200">
+                                {p.decade_sort_streak ?? 0}
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
