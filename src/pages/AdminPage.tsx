@@ -24,6 +24,8 @@ import {
   Image as ImageIcon,
   Flag,
   X,
+  Lock,
+  LogOut,
 } from 'lucide-react';
 
 interface AdminStats {
@@ -384,6 +386,13 @@ export const AdminPage: React.FC = () => {
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [isStatsLoading, setIsStatsLoading] = useState(false);
 
+  // Admin sign-in form state (shown when isAuthorized === false)
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [loginSubmitting, setLoginSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
   // Active Tab: reports, photos, upload, users, insights
   const [activeTab, setActiveTab] = useState<'reports' | 'photos' | 'upload' | 'users' | 'insights'>('reports');
 
@@ -441,44 +450,90 @@ export const AdminPage: React.FC = () => {
   const [insightsError, setInsightsError] = useState<string | null>(null);
   const [insightActionLoading, setInsightActionLoading] = useState<Record<string, boolean>>({});
 
-  // 1. Initial auth check & current user ID
-  useEffect(() => {
-    let isMounted = true;
+  // Checks whether the current Supabase session belongs to an admin.
+  // Used both on initial load and right after a sign-in attempt.
+  // Returns true/false (never throws) so callers can react to the result.
+  const checkAdminAccess = useCallback(async (): Promise<boolean> => {
+    try {
+      const [{ data: statsData, error: statsError }, { data: authData }] = await Promise.all([
+        supabase.rpc('admin_stats'),
+        supabase.auth.getUser(),
+      ]);
 
-    const checkAdminAccess = async () => {
-      try {
-        const [{ data: statsData, error: statsError }, { data: authData }] = await Promise.all([
-          supabase.rpc('admin_stats'),
-          supabase.auth.getUser(),
-        ]);
+      const statObj = Array.isArray(statsData) ? statsData[0] : statsData;
 
-        if (statsError || !statsData) {
-          navigate('/', { replace: true });
-          return;
-        }
-
-        const statObj = Array.isArray(statsData) ? statsData[0] : statsData;
-        if (!statObj || typeof statObj !== 'object') {
-          navigate('/', { replace: true });
-          return;
-        }
-
-        if (isMounted) {
-          setStats(statObj);
-          setCurrentUserId(authData?.user?.id ?? null);
-          setIsAuthorized(true);
-        }
-      } catch {
-        navigate('/', { replace: true });
+      if (statsError || !statObj || typeof statObj !== 'object') {
+        setIsAuthorized(false);
+        setCurrentUserId(authData?.user?.id ?? null);
+        return false;
       }
-    };
 
+      setStats(statObj);
+      setCurrentUserId(authData?.user?.id ?? null);
+      setIsAuthorized(true);
+      return true;
+    } catch {
+      setIsAuthorized(false);
+      return false;
+    }
+  }, []);
+
+  // 1. Initial auth check on mount
+  useEffect(() => {
     checkAdminAccess();
+  }, [checkAdminAccess]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [navigate]);
+  // 2. Admin sign-in form submit
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+
+    const trimmedEmail = loginEmail.trim();
+    if (!trimmedEmail || !trimmedEmail.includes('@')) {
+      setAuthError('Please enter your email.');
+      return;
+    }
+    if (!loginPassword) {
+      setAuthError('Please enter your password.');
+      return;
+    }
+
+    setLoginSubmitting(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: trimmedEmail,
+        password: loginPassword,
+      });
+      if (signInError) throw signInError;
+
+      const authorized = await checkAdminAccess();
+      if (!authorized) {
+        // Signed in fine, but this account isn't in the admins table.
+        // Sign back out so a random player's own account doesn't sit
+        // "logged in" on the admin screen.
+        await supabase.auth.signOut();
+        setIsAuthorized(false);
+        setAuthError('That account is signed in, but it does not have admin access.');
+      } else {
+        setLoginPassword('');
+      }
+    } catch (err: any) {
+      const parsedMsg = await parseSupabaseError(err);
+      setAuthError(parsedMsg || err.message || 'Sign-in failed. Check your email and password.');
+    } finally {
+      setLoginSubmitting(false);
+    }
+  };
+
+  // 3. Admin sign-out
+  const handleAdminSignOut = async () => {
+    await supabase.auth.signOut();
+    setIsAuthorized(false);
+    setCurrentUserId(null);
+    setStats(null);
+    setLoginEmail('');
+    setLoginPassword('');
+  };
 
   // Refresh Stats
   const refreshStats = useCallback(async () => {
@@ -985,6 +1040,93 @@ export const AdminPage: React.FC = () => {
     return <div className="min-h-screen bg-[#0c0a09]" />;
   }
 
+  // Not signed in as an admin: show a dedicated sign-in form instead of
+  // silently bouncing back to the game (the real gate is still server-side —
+  // this just gives staff a proper way in, and a clear reason when it fails).
+  if (isAuthorized === false) {
+    return (
+      <div className="min-h-screen bg-[#0c0a09] text-stone-200 font-sans flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          <div className="flex flex-col items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-400">
+              <Shield className="w-6 h-6" />
+            </div>
+            <h1 className="text-lg font-bold text-stone-100">Admin Sign-In</h1>
+            <p className="text-sm text-stone-500 text-center">
+              Sign in with an admin account to manage When &amp; Where.
+            </p>
+          </div>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">
+                Email
+              </label>
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                autoComplete="email"
+                autoFocus
+                className="w-full bg-stone-900 border border-stone-700 rounded-lg px-3.5 py-2.5 text-stone-100 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showLoginPassword ? 'text' : 'password'}
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  autoComplete="current-password"
+                  className="w-full bg-stone-900 border border-stone-700 rounded-lg px-3.5 py-2.5 pr-10 text-stone-100 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300 cursor-pointer"
+                  aria-label={showLoginPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {authError && (
+              <div className="flex items-start gap-2 text-sm text-rose-300 bg-rose-950/40 border border-rose-900 rounded-lg px-3 py-2.5">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loginSubmitting}
+              className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-stone-950 font-semibold rounded-lg py-2.5 transition-colors cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Lock className="w-4 h-4" />
+              {loginSubmitting ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
+
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="w-full mt-4 text-sm text-stone-500 hover:text-stone-300 flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to the game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Safe Stats extraction
   const totalPhotos = stats?.total_photos ?? stats?.photos_total ?? stats?.totalPhotos ?? 0;
   const activePhotos = stats?.active_photos ?? stats?.photos_active ?? stats?.activePhotos ?? 0;
@@ -1035,6 +1177,16 @@ export const AdminPage: React.FC = () => {
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Exit to App</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleAdminSignOut}
+            className="py-2 px-3 rounded-lg bg-stone-900 hover:bg-rose-950 border border-stone-700 hover:border-rose-900 text-xs font-semibold text-stone-300 hover:text-rose-300 flex items-center gap-1.5 transition-colors cursor-pointer"
+            title="Sign out of this admin account"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>
