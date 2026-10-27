@@ -1,5 +1,9 @@
 import { supabase } from './supabase.ts';
 
+/** The game shows no ads yet, so the $2.99 "remove ads" pass has nothing to
+ *  remove and its buttons stay hidden. Turn this on once real ads are live. */
+export const AD_FREE_PASS_ENABLED = false;
+
 const AD_FREE_STORAGE_KEY = 'timeguess_ad_free_status';
 const AD_FREE_DATE_KEY = 'timeguess_ad_free_date';
 

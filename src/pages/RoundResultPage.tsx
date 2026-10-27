@@ -14,7 +14,6 @@ import {
 import { useGame } from '../context/GameContext.tsx';
 import { ResultMap } from '../components/ResultMap.tsx';
 import { PhotoLightbox } from '../components/PhotoLightbox.tsx';
-import { ArchivalAdBanner } from '../components/ArchivalAdBanner.tsx';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
 
 interface RoundResultPageProps {

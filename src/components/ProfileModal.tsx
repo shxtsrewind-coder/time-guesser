@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase.ts';
 import {
+  AD_FREE_PASS_ENABLED,
   getLocalAdFreeStatus,
   restorePurchases,
   getAdFreePurchaseDate,
@@ -279,7 +280,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </span>
         </div>
 
-        {/* Ad-Free Status Block */}
+        {/* Ad-Free Status Block: shown once there are ads to remove, or to an existing supporter */}
+        {(AD_FREE_PASS_ENABLED || isAdFree) && (
         <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs text-stone-400 font-medium">Supporter Status</span>
@@ -332,6 +334,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </p>
           )}
         </div>
+        )}
 
         {/* Display name & Country form */}
         <form onSubmit={handleSave} className="space-y-4">

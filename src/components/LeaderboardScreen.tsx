@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { supabase, parseSupabaseError } from '../lib/supabase.ts';
 import { DailyLeaderboardRow, AllTimeLeaderboardRow, DecadeSortLeaderboardRow } from '../types.ts';
-import { getLocalAdFreeStatus } from '../lib/monetization.ts';
+import { AD_FREE_PASS_ENABLED, getLocalAdFreeStatus } from '../lib/monetization.ts';
 import { getUserCountryCode, codeToFlagEmoji } from '../lib/countryFlags.ts';
 
 interface LeaderboardScreenProps {
@@ -200,7 +200,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         </button>
 
         <div className="flex items-center gap-2.5">
-          {!isAdFree && onOpenRemoveAds && (
+          {AD_FREE_PASS_ENABLED && !isAdFree && onOpenRemoveAds && (
             <button
               type="button"
               onClick={onOpenRemoveAds}

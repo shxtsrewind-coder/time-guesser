@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play, ArrowUpDown, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { FinishGameResponse, GameMode } from '../types.ts';
-import { ArchivalAdBanner } from './ArchivalAdBanner.tsx';
 import { getLocalAdFreeStatus } from '../lib/monetization.ts';
 import { getStreakData, recordDailyCompletion, getTimeUntilNextDaily, StreakData } from '../lib/streak.ts';
 
