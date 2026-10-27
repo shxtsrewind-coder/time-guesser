@@ -94,7 +94,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#161412] border border-stone-700/90 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-64 flex flex-col">
+        <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#f6f6f3] border border-stone-700/90 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-64 flex flex-col">
           {/* Search box inside dropdown */}
           <div className="p-2.5 border-b border-stone-800 bg-stone-950/80 sticky top-0 z-10 flex items-center gap-2">
             <Search className="w-3.5 h-3.5 text-stone-400 shrink-0 ml-1" />

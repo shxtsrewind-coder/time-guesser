@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0a0e1a]/90 backdrop-blur-xl border-b border-slate-800/80 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-[#f6f6f3]/90 backdrop-blur-xl border-b border-slate-800/80 transition-colors">
       <div className="max-w-6xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3">
         {/* Zone 1: Single text element Brand Title with When (Gold) & Where (Cyan) */}
         <button

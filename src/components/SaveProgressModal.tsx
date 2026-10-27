@@ -325,10 +325,10 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-modal-backdrop"
+      className="fixed inset-0 z-50 bg-white/85 backdrop-blur-md flex items-center justify-center p-4 animate-modal-backdrop"
     >
       <div
-        className="w-full max-w-lg bg-[#141210] border border-amber-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto animate-modal-content"
+        className="w-full max-w-lg bg-[#f6f6f3] border border-amber-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button - shown only if choice was already completed in this session */}
@@ -383,7 +383,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
             <button
               type="button"
               onClick={handleDismissGuest}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-stone-950 font-bold text-xs transition-colors cursor-pointer shadow-md"
+              className="w-full py-3 px-4 rounded-xl bg-stone-50 hover:bg-stone-300 text-stone-950 font-bold text-xs transition-colors cursor-pointer shadow-md"
             >
               Continue to Game
             </button>
@@ -430,7 +430,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
               <button
                 type="button"
                 onClick={() => setMode('signup')}
-                className="group relative p-5 rounded-2xl bg-[#181512] hover:bg-[#1e1a16] border-2 border-amber-600/70 hover:border-amber-500 transition-all text-left flex flex-col justify-between space-y-4 cursor-pointer active:scale-[0.99] shadow-lg shadow-amber-950/20"
+                className="group relative p-5 rounded-2xl bg-[#f6f6f3] hover:bg-[#f6f6f3] border-2 border-amber-600/70 hover:border-amber-500 transition-all text-left flex flex-col justify-between space-y-4 cursor-pointer active:scale-[0.99] shadow-lg shadow-amber-950/20"
               >
                 <div className="space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
@@ -580,7 +580,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 active:scale-[0.98] text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+                className="w-full py-3.5 px-4 rounded-xl bg-stone-50 hover:bg-stone-300 active:scale-[0.98] text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
               >
                 {isSubmitting ? (
                   <>
@@ -686,7 +686,7 @@ export const SaveProgressModal: React.FC<SaveProgressModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 active:scale-[0.98] text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+                className="w-full py-3.5 px-4 rounded-xl bg-stone-50 hover:bg-stone-300 active:scale-[0.98] text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
               >
                 {isSubmitting ? (
                   <>

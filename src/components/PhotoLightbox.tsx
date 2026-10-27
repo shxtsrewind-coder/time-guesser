@@ -30,7 +30,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
       role="dialog"
       aria-modal="true"
       aria-label="Enlarged photo view"
-      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-between p-4 animate-modal-backdrop"
+      className="fixed inset-0 z-50 bg-white/85 backdrop-blur-md flex flex-col items-center justify-between p-4 animate-modal-backdrop"
       onClick={onClose}
     >
       {/* Top bar */}
@@ -39,7 +39,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
           <button
             type="button"
             onClick={toggleZoom}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 text-xs hover:text-white transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 text-xs hover:text-stone-50 transition-colors cursor-pointer"
             title={scale === 1 ? "Zoom In" : "Zoom Out"}
           >
             {scale === 1 ? <ZoomIn className="w-4 h-4 text-amber-400" /> : <ZoomOut className="w-4 h-4 text-amber-400" />}
@@ -50,7 +50,7 @@ export const PhotoLightbox: React.FC<PhotoLightboxProps> = ({ imageUrl, altText,
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+          className="p-2 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 hover:text-stone-50 transition-colors cursor-pointer"
           aria-label="Close zoomed photo"
         >
           <X className="w-5 h-5" />

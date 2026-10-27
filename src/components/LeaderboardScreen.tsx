@@ -292,7 +292,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         {/* Left Column (5 cols on lg): Top 3 Podium & Player Standing */}
         <div className="lg:col-span-5 space-y-4">
           {/* Top 3 Podium Showcase Card */}
-          <div className="bg-[#141210] border border-stone-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div className="bg-[#f6f6f3] border border-stone-800 rounded-2xl p-5 shadow-xl space-y-4">
             <div className="flex items-center justify-between text-xs text-stone-400 font-semibold uppercase tracking-wider font-mono">
               <span>Podium Leaders</span>
               <span className="text-amber-400 flex items-center gap-1">
@@ -319,7 +319,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 {/* 1st Place Champion */}
                 {topThree.first && (
                   <div className="relative group overflow-hidden rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 p-[1px] shadow-lg shadow-amber-950/40">
-                    <div className="bg-[#171513] p-3.5 rounded-xl flex items-center justify-between">
+                    <div className="bg-[#f6f6f3] p-3.5 rounded-xl flex items-center justify-between">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 shrink-0">
                           <Crown className="w-5 h-5 fill-amber-400" />
@@ -418,7 +418,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           </div>
 
           {/* User's Standing Card */}
-          <div className="bg-[#141210] border border-stone-800 rounded-2xl p-4 space-y-2">
+          <div className="bg-[#f6f6f3] border border-stone-800 rounded-2xl p-4 space-y-2">
             <div className="flex items-center justify-between text-xs text-stone-400 font-medium">
               <span className="flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-amber-400" />
@@ -484,7 +484,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
           </div>
 
           {/* Roster Container */}
-          <div className="bg-[#141210] border border-stone-800 rounded-2xl p-2 min-h-[380px] flex flex-col justify-start">
+          <div className="bg-[#f6f6f3] border border-stone-800 rounded-2xl p-2 min-h-[380px] flex flex-col justify-start">
             {loading ? (
               <div className="space-y-2 p-2">
                 {Array.from({ length: 7 }).map((_, i) => (

@@ -201,9 +201,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
           {/* Photo & Map: Stood together! Side-by-side on md+, stacked on mobile with expand affordance */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 items-stretch">
             {/* Left: Archival Photograph Showcase */}
-            <div className="relative group rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-xl h-[200px] xs:h-[220px] sm:h-[280px] md:h-[440px] flex items-center justify-center">
+            <div className="relative group rounded-2xl overflow-hidden bg-[#f6f6f3] border border-slate-800 shadow-xl h-[200px] xs:h-[220px] sm:h-[280px] md:h-[440px] flex items-center justify-center">
               {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 bg-[#0b1120] animate-pulse flex flex-col items-center justify-center gap-2 text-slate-500">
+                <div className="absolute inset-0 bg-[#f6f6f3] animate-pulse flex flex-col items-center justify-center gap-2 text-slate-500">
                   <div className="w-7 h-7 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin" />
                 </div>
               )}
@@ -254,7 +254,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 onClick={() => setIsLightboxOpen(true)}
                 aria-label="Enlarge photo"
-                className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
+                className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-stone-50 text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
               >
                 <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
                 <span className="font-medium text-xs">Zoom</span>
@@ -286,7 +286,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
           {/* Controls Below: Year Slider & Weekday Picker & Lock In Guess */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-stretch pt-1">
             {/* Year Selector (always shown) */}
-            <div className={`space-y-2 bg-[#0b1120]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md ${
+            <div className={`space-y-2 bg-[#f6f6f3]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md ${
               roundInfo.ask_weekday ? 'md:col-span-6 lg:col-span-6' : 'md:col-span-8'
             }`}>
               <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
@@ -366,7 +366,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
             {/* Weekday Selector (if ask_weekday is true) */}
             {roundInfo.ask_weekday && (
-              <div className="space-y-2.5 bg-[#0b1120]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md md:col-span-6 lg:col-span-3 flex flex-col justify-between">
+              <div className="space-y-2.5 bg-[#f6f6f3]/95 border border-slate-800 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-md md:col-span-6 lg:col-span-3 flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
                   <Clock className="w-3.5 h-3.5 text-purple-400" />
                   <span>Day of Week</span>
@@ -385,7 +385,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         className={`py-2 px-0 rounded-lg xs:rounded-xl text-[10px] xs:text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer min-w-0 ${
                           isSelected
                             ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/40 ring-1 ring-indigo-400/50'
-                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
+                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-stone-50 active:scale-95'
                         }`}
                       >
                         <span className="truncate">{day.label}</span>
@@ -438,9 +438,9 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
         /* When ask_location is false: Photo on Left (7 cols), Controls on Right (5 cols) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-7 space-y-3">
-            <div className="relative group rounded-3xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-2xl aspect-[4/3] flex items-center justify-center">
+            <div className="relative group rounded-3xl overflow-hidden bg-[#f6f6f3] border border-slate-800 shadow-2xl aspect-[4/3] flex items-center justify-center">
               {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 bg-[#0b1120] animate-pulse flex flex-col items-center justify-center gap-2.5 text-slate-500">
+                <div className="absolute inset-0 bg-[#f6f6f3] animate-pulse flex flex-col items-center justify-center gap-2.5 text-slate-500">
                   <div className="w-8 h-8 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin" />
                 </div>
               )}
@@ -479,7 +479,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                 type="button"
                 onClick={() => setIsLightboxOpen(true)}
                 aria-label="Zoom photo"
-                className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-white text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
+                className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border border-slate-750 text-slate-200 hover:text-stone-50 text-xs flex items-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
               >
                 <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
                 <span className="font-medium text-xs">Zoom</span>
@@ -500,7 +500,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
           <div className="lg:col-span-5 space-y-4">
             {/* Year Selector */}
-            <div className="space-y-3 bg-[#0b1120]/95 border border-slate-800 rounded-3xl p-5 shadow-md">
+            <div className="space-y-3 bg-[#f6f6f3]/95 border border-slate-800 rounded-3xl p-5 shadow-md">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
                 <Calendar className="w-4 h-4 text-amber-400" />
                 <span>Estimated Year</span>
@@ -576,7 +576,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
 
             {/* Weekday Selector */}
             {roundInfo.ask_weekday && (
-              <div className="space-y-2.5 bg-[#0b1120]/95 border border-slate-800 rounded-3xl p-4 shadow-md">
+              <div className="space-y-2.5 bg-[#f6f6f3]/95 border border-slate-800 rounded-3xl p-4 shadow-md">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
                   <Clock className="w-4 h-4 text-purple-400" />
                   <span>Day of Week</span>
@@ -594,7 +594,7 @@ export const RoundScreen: React.FC<RoundScreenProps> = ({
                         className={`py-2.5 px-1 rounded-xl text-xs font-bold transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
                           isSelected
                             ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/40 ring-1 ring-indigo-400/50'
-                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white active:scale-95'
+                            : 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-stone-50 active:scale-95'
                         }`}
                       >
                         <span>{day.label}</span>

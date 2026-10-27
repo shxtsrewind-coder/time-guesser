@@ -85,9 +85,9 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/85 backdrop-blur-md animate-fade-in"
     >
-      <div className="relative w-full max-w-lg bg-[#141210] border border-amber-600/30 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 text-stone-100 max-h-[92vh] overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-[#f6f6f3] border border-amber-600/30 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 text-stone-100 max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           type="button"
@@ -179,7 +179,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
               <div className="text-[11px] font-mono text-stone-500 mb-1.5">
                 Leaderboard Entry Preview:
               </div>
-              <div className="flex items-center justify-between p-3 rounded-xl bg-[#0e0c0a] border border-amber-600/30">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-[#f6f6f3] border border-amber-600/30">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-amber-400 font-mono text-xs font-bold">#1</span>
                   <span className="text-xl" title={currentCountryObj.name}>
@@ -209,7 +209,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 active:scale-[0.98] text-stone-950 font-bold text-sm shadow-lg shadow-amber-950/50 transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full py-3.5 px-4 rounded-xl bg-stone-50 hover:bg-stone-300 active:scale-[0.98] text-stone-950 font-bold text-sm shadow-lg shadow-amber-950/50 transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
               {isSubmitting ? (
                 <span>Registering Historian...</span>

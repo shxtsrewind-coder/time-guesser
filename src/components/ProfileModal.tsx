@@ -196,11 +196,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-modal-backdrop"
+      className="fixed inset-0 z-50 bg-white/85 backdrop-blur-sm flex items-center justify-center p-4 animate-modal-backdrop"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative max-h-[92vh] overflow-y-auto animate-modal-content"
+        className="w-full max-w-sm bg-[#f6f6f3] border border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 relative max-h-[92vh] overflow-y-auto animate-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-stone-800/80 pb-3">
@@ -239,19 +239,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="bg-[#141210] p-2.5 rounded-xl border border-stone-800">
+            <div className="bg-[#f6f6f3] p-2.5 rounded-xl border border-stone-800">
               <span className="text-[10px] text-stone-500 uppercase font-mono block">Current</span>
               <span className="text-lg font-bold font-mono text-amber-300">
                 {streakData.currentStreak} <span className="text-[10px] text-stone-400 font-normal">d</span>
               </span>
             </div>
-            <div className="bg-[#141210] p-2.5 rounded-xl border border-stone-800">
+            <div className="bg-[#f6f6f3] p-2.5 rounded-xl border border-stone-800">
               <span className="text-[10px] text-stone-500 uppercase font-mono block">Best</span>
               <span className="text-lg font-bold font-mono text-stone-200">
                 {streakData.maxStreak} <span className="text-[10px] text-stone-400 font-normal">d</span>
               </span>
             </div>
-            <div className="bg-[#141210] p-2.5 rounded-xl border border-stone-800">
+            <div className="bg-[#f6f6f3] p-2.5 rounded-xl border border-stone-800">
               <span className="text-[10px] text-stone-500 uppercase font-mono block">Total</span>
               <span className="text-lg font-bold font-mono text-stone-200">
                 {streakData.totalCompleted || streakData.completedDates.length}

@@ -233,7 +233,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* Daily streak hero badge */}
-      <div className="max-w-xl mx-auto bg-[#0b1120]/95 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl flex flex-col xs:flex-row xs:items-center justify-between gap-3">
+      <div className="max-w-xl mx-auto bg-[#f6f6f3]/95 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl flex flex-col xs:flex-row xs:items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
             <Flame className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-400 animate-pulse" />
@@ -306,7 +306,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* Daily Challenge Card: Normal or Locked/Completed State */}
           {showDailyFinished ? (
             <div className="w-full relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-800 via-amber-950/30 to-slate-800 border border-slate-700/80 shadow-xl">
-              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl bg-[#0b1120]/95 flex flex-col xs:flex-row xs:items-center justify-between gap-3 sm:gap-4">
+              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl bg-[#f6f6f3]/95 flex flex-col xs:flex-row xs:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-900 border border-slate-750 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-inner">
                     <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -353,9 +353,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               type="button"
               disabled={isLoading}
               onClick={() => onStartGame('daily')}
-              className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#0b1120] border border-amber-500/25 hover:border-amber-400/50 shadow-xl shadow-amber-950/20 active:scale-[0.99] disabled:opacity-60 text-left cursor-pointer"
+              className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#f6f6f3] border border-amber-500/25 hover:border-amber-400/50 shadow-xl shadow-amber-950/20 active:scale-[0.99] disabled:opacity-60 text-left cursor-pointer"
             >
-              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
+              <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#f6f6f3] transition-colors flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                     <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -388,9 +388,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             type="button"
             onClick={onOpenDecadeSort}
-            className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#0b1120] border border-cyan-500/25 hover:border-cyan-400/50 shadow-xl shadow-cyan-950/20 active:scale-[0.99] text-left cursor-pointer"
+            className="wwr-card w-full relative group overflow-hidden rounded-2xl bg-[#f6f6f3] border border-cyan-500/25 hover:border-cyan-400/50 shadow-xl shadow-cyan-950/20 active:scale-[0.99] text-left cursor-pointer"
           >
-            <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#0f172a] transition-colors flex items-center justify-between gap-3">
+            <div className="relative px-4 py-3.5 sm:px-5 sm:py-5 rounded-2xl group-hover:bg-[#f6f6f3] transition-colors flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
                   <ArrowUpDown className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
@@ -419,7 +419,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {/* Dismissible First-Visit Tip (shown once, dismissible) */}
           {!hasDismissedTip && (
-            <div className="bg-[#0b1120]/95 border border-slate-800 rounded-xl px-3.5 py-2.5 flex items-center justify-between text-xs text-slate-300 shadow-md gap-2">
+            <div className="bg-[#f6f6f3]/95 border border-slate-800 rounded-xl px-3.5 py-2.5 flex items-center justify-between text-xs text-slate-300 shadow-md gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="text-amber-400 font-bold font-mono text-[11px] shrink-0">Tip:</span>
                 <span className="truncate">Deduce year, world coordinates, and weekday to score up to 11,000 pts.</span>
@@ -459,7 +459,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Right Column (5 cols on lg): Leadership Board Standings */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-[#0b1120]/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-md">
+          <div className="bg-[#f6f6f3]/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-wider font-mono">
                 <Trophy className="w-4 h-4 text-amber-400" />

@@ -9,7 +9,7 @@
     <meta name="description" content="Guess the year, the place, and the day of the week from real archival photographs. A new free Daily Challenge every day, plus unlimited Decade Sort rounds." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://whenandwhere.bgameworld.com/" />
-    <meta name="theme-color" content="#090d16" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="author" content="bgameworld.com" />
 
     <!-- Open Graph (Facebook, LinkedIn, Discord, WhatsApp, ...) -->
@@ -71,7 +71,7 @@
          first image fetch skips DNS + TLS setup instead of paying for it on the critical path. -->
     <link rel="preconnect" href="https://pfxmswdwosimghjaggsk.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://pfxmswdwosimghjaggsk.supabase.co">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400..600&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!--
       Critical, inline boot styles. These paint immediately from the raw HTML —
       before the JS bundle downloads/parses, before Tailwind's generated CSS
@@ -83,7 +83,7 @@
     -->
     <style>
       html, body {
-        background-color: #090d16;
+        background-color: #ffffff;
       }
       #initial-loader {
         position: fixed;
@@ -94,8 +94,8 @@
         align-items: center;
         justify-content: center;
         gap: 18px;
-        background-color: #090d16;
-        background-image: radial-gradient(circle at 50% 0%, #151d32 0%, #090d16 55%, #060911 100%);
+        background-color: #ffffff;
+        background-image: none;
         transition: opacity 0.25s ease;
       }
       #initial-loader.is-hidden {
@@ -106,28 +106,28 @@
         display: flex;
         align-items: center;
         gap: 7px;
-        font-family: 'Cinzel', Georgia, serif;
+        font-family: 'Zilla Slab', Rockwell, Georgia, serif;
         font-weight: 700;
         font-size: 28px;
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
-      #initial-loader .wwr-loader-mark .amber { color: #f5b23c; }
-      #initial-loader .wwr-loader-mark .cyan { color: #38d9e8; }
+      #initial-loader .wwr-loader-mark .amber { color: #b5841e; }
+      #initial-loader .wwr-loader-mark .cyan { color: #0e7490; }
       #initial-loader .wwr-loader-mark .amp {
-        font-family: 'Cinzel', Georgia, serif;
+        font-family: 'Zilla Slab', Rockwell, Georgia, serif;
         font-style: normal;
         font-weight: 700;
         font-size: 22px;
-        color: #5b6372;
+        color: #8b8b86;
         margin: 0 2px;
       }
       #initial-loader .wwr-loader-spinner {
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        border: 2.5px solid rgba(245, 178, 60, 0.25);
-        border-top-color: #f5b23c;
+        border: 2.5px solid rgba(18, 18, 18, 0.12);
+        border-top-color: #b5841e;
         animation: wwr-spin 0.7s linear infinite;
       }
       #initial-loader .wwr-loader-caption {
@@ -135,7 +135,7 @@
         font-size: 11px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #6b7280;
+        color: #5c5c5c;
       }
       @keyframes wwr-spin {
         to { transform: rotate(360deg); }
@@ -147,7 +147,7 @@
       }
     </style>
   </head>
-  <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-900/60 selection:text-cyan-200">
+  <body class="bg-[#ffffff] text-slate-100 antialiased selection:bg-amber-800 selection:text-stone-50">
     <div id="initial-loader" aria-live="polite" aria-label="Loading When &amp; Where">
       <div class="wwr-loader-mark">
         <span class="amber">WHEN</span>

@@ -208,7 +208,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
       </div>
 
       {/* 2. Round Score Breakdown Card */}
-      <div className="bg-[#141210] border border-stone-800 rounded-3xl p-5 sm:p-6 shadow-2xl text-center space-y-4 relative overflow-hidden">
+      <div className="bg-[#f6f6f3] border border-stone-800 rounded-3xl p-5 sm:p-6 shadow-2xl text-center space-y-4 relative overflow-hidden">
         <div className="flex items-center justify-between text-xs text-stone-400">
           <span className="font-bold text-amber-400 uppercase tracking-wider font-cinzel text-xs">
             Round {roundNo} Results
@@ -320,7 +320,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
                 </span>
                 <span className="text-[11px] text-stone-500">Historical Record</span>
               </div>
-              <div className="relative rounded-3xl overflow-hidden bg-[#141210] border border-stone-800 shadow-xl h-[300px] sm:h-[340px] md:h-[380px]">
+              <div className="relative rounded-3xl overflow-hidden bg-[#f6f6f3] border border-stone-800 shadow-xl h-[300px] sm:h-[340px] md:h-[380px]">
                 <img
                   src={roundInfo.image_url}
                   alt={caption || 'Archival photograph'}
@@ -334,7 +334,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
                 <button
                   type="button"
                   onClick={() => setIsLightboxOpen(true)}
-                  className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-black/80 backdrop-blur-sm text-stone-300 hover:text-white text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
+                  className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-white/85 backdrop-blur-sm text-stone-300 hover:text-stone-50 text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
                 >
                   <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
                   <span>Enlarge</span>
@@ -370,7 +370,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
       ) : (
         /* When no location asked, show photo */
         roundInfo?.image_url && (
-          <div className="relative rounded-3xl overflow-hidden bg-[#141210] border border-stone-800 shadow-md aspect-[16/10] max-h-72">
+          <div className="relative rounded-3xl overflow-hidden bg-[#f6f6f3] border border-stone-800 shadow-md aspect-[16/10] max-h-72">
             <img
               src={roundInfo.image_url}
               alt={caption || 'Archival photograph'}
@@ -384,7 +384,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
             <button
               type="button"
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-black/80 backdrop-blur-sm text-stone-300 hover:text-white text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
+              className="absolute bottom-2.5 right-2.5 px-2.5 py-1.5 rounded-xl bg-white/85 backdrop-blur-sm text-stone-300 hover:text-stone-50 text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
             >
               <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
               <span>Enlarge Photo</span>
@@ -394,7 +394,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
       )}
 
       {/* 4. Year Timeline & Accuracy Bar */}
-      <div className="bg-[#141210] border border-stone-800 rounded-2xl p-4 sm:p-5 space-y-3">
+      <div className="bg-[#f6f6f3] border border-stone-800 rounded-2xl p-4 sm:p-5 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <span className="font-semibold text-stone-300 flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-amber-400" />
@@ -468,7 +468,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
       </div>
 
       {/* 5. Archival Caption, Fun Fact & Credit Link */}
-      <div className="bg-[#141210]/90 border border-stone-800 rounded-2xl p-4 sm:p-5 space-y-3">
+      <div className="bg-[#f6f6f3]/90 border border-stone-800 rounded-2xl p-4 sm:p-5 space-y-3">
         {caption && (
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 font-mono">
@@ -518,7 +518,7 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
       </div>
 
       {/* 7. Large Sticky Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/95 to-transparent pt-4 pb-4 px-4 backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-[#f6f6f3] via-[#f6f6f3]/95 to-transparent pt-4 pb-4 px-4 backdrop-blur-sm">
         <div className="max-w-2xl mx-auto">
           <button
             type="button"

@@ -98,7 +98,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         </div>
 
         {/* Primary Score Showcase */}
-        <div className="bg-[#0b1120] border border-slate-800 rounded-3xl p-5 sm:p-8 text-center shadow-2xl relative overflow-hidden space-y-3">
+        <div className="bg-[#f6f6f3] border border-slate-800 rounded-3xl p-5 sm:p-8 text-center shadow-2xl relative overflow-hidden space-y-3">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="text-xs font-semibold uppercase tracking-widest text-slate-400 font-mono">
@@ -178,7 +178,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         )}
 
         {/* Round by Round Breakdown */}
-        <div className="bg-[#0b1120]/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
+        <div className="bg-[#f6f6f3]/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
           <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center justify-between font-mono">
             <span>Round Accuracy Breakdown</span>
             <span>Points</span>
@@ -281,7 +281,7 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
         {mode === 'daily' ? (
           <div className="space-y-3">
             {/* Daily challenge completed reminder */}
-            <div className="bg-[#0b1120] border border-slate-850/80 rounded-2xl p-4 text-center space-y-1 shadow-inner">
+            <div className="bg-[#f6f6f3] border border-slate-850/80 rounded-2xl p-4 text-center space-y-1 shadow-inner">
               <div className="flex items-center justify-center gap-2 text-amber-300 font-semibold text-xs sm:text-sm">
                 <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Come back tomorrow for a new Daily Challenge!</span>

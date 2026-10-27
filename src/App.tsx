@@ -224,7 +224,7 @@ function AppLayout() {
 
   if (location.pathname === '/admin') {
     return (
-      <div className="min-h-screen bg-[#100e0d] text-stone-100 flex flex-col font-sans">
+      <div className="min-h-screen bg-[#f6f6f3] text-stone-100 flex flex-col font-sans">
         <ScrollToTop />
         <AdminPage />
       </div>
@@ -232,12 +232,12 @@ function AppLayout() {
   }
 
   return (
-    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#090d16] bg-vignette text-slate-100 flex flex-col font-sans selection:bg-amber-900/50 selection:text-amber-200 relative">
+    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#f6f6f3] bg-vignette text-slate-100 flex flex-col font-sans selection:bg-amber-900/50 selection:text-amber-200 relative">
       <ScrollToTop />
 
       {/* Global Success Notification Toast */}
       {toastMessage && (
-        <div className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] bg-[#0f172a]/95 border border-amber-500/50 text-amber-200 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md animate-fade-in pointer-events-auto">
+        <div className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] bg-[#f6f6f3]/95 border border-amber-500/50 text-amber-200 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md animate-fade-in pointer-events-auto">
           <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
           <span className="truncate">{toastMessage}</span>
         </div>

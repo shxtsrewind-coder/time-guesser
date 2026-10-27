@@ -7,7 +7,7 @@ export const CheckoutCancelPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-md mx-auto px-4 sm:px-6 py-12 flex flex-col items-center justify-center text-center space-y-6 page-enter min-h-[60vh]">
-      <div className="w-full bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-5">
+      <div className="w-full bg-[#f6f6f3] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-5">
         <div className="w-14 h-14 rounded-2xl bg-stone-900 border border-stone-800 mx-auto flex items-center justify-center text-stone-400">
           <ShieldAlert className="w-7 h-7 text-amber-500" />
         </div>

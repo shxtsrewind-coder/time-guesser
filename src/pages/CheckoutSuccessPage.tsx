@@ -78,7 +78,7 @@ export const CheckoutSuccessPage: React.FC = () => {
         </div>
       ) : isAdsRemoved === true ? (
         /* Verified Ads Removed Screen */
-        <div className="w-full bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden">
+        <div className="w-full bg-[#f6f6f3] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/40 mx-auto flex items-center justify-center text-amber-400 shadow-lg">
@@ -120,7 +120,7 @@ export const CheckoutSuccessPage: React.FC = () => {
         </div>
       ) : (
         /* Pending / Processing Verification State */
-        <div className="w-full bg-[#141210] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+        <div className="w-full bg-[#f6f6f3] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
           <div className="w-14 h-14 rounded-2xl bg-stone-900 border border-stone-800 mx-auto flex items-center justify-center text-amber-400">
             <AlertCircle className="w-7 h-7 text-amber-400" />
           </div>

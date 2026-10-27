@@ -289,8 +289,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
           <div
             className={`p-6 sm:p-8 rounded-2xl border text-center space-y-3 relative overflow-hidden ${
               result.is_perfect
-                ? 'bg-gradient-to-b from-amber-950/50 via-[#181410] to-[#120f0d] border-amber-500/60 shadow-2xl shadow-amber-950/40'
-                : 'bg-[#141210] border-stone-800 shadow-xl'
+                ? 'bg-gradient-to-b from-amber-950/50 via-[#f6f6f3] to-[#f6f6f3] border-amber-500/60 shadow-2xl shadow-amber-950/40'
+                : 'bg-[#f6f6f3] border-stone-800 shadow-xl'
             }`}
           >
             {result.is_perfect && (
@@ -432,8 +432,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                       key={item.photo_id}
                       className={`p-3.5 sm:p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
                         isExact
-                          ? 'bg-[#141812] border-emerald-800/80 shadow-sm'
-                          : 'bg-[#151210] border-stone-800'
+                          ? 'bg-[#f6f6f3] border-emerald-800/80 shadow-sm'
+                          : 'bg-[#f6f6f3] border-stone-800'
                       }`}
                     >
                       <div className="flex items-start sm:items-center gap-3.5">
@@ -454,7 +454,7 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                             decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                          <div className="absolute inset-0 bg-white/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <ZoomIn className="w-4 h-4 text-stone-200" />
                           </div>
                         </div>
@@ -506,8 +506,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                       key={photoId}
                       className={`p-3.5 sm:p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
                         isExact
-                          ? 'bg-[#141812] border-emerald-800/80'
-                          : 'bg-[#171210] border-amber-900/40'
+                          ? 'bg-[#f6f6f3] border-emerald-800/80'
+                          : 'bg-[#f6f6f3] border-amber-900/40'
                       }`}
                     >
                       <div className="flex items-start sm:items-center gap-3.5">
@@ -526,7 +526,7 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                             decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                          <div className="absolute inset-0 bg-white/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <ZoomIn className="w-4 h-4 text-stone-200" />
                           </div>
                         </div>
@@ -601,8 +601,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
           <div
             className={`p-3.5 sm:p-4 rounded-2xl border shadow-xl relative overflow-hidden transition-all ${
               isAsc
-                ? 'bg-gradient-to-r from-amber-950/40 via-[#181410] to-[#141210] border-amber-500/50'
-                : 'bg-gradient-to-r from-cyan-950/40 via-[#14161b] to-[#141210] border-cyan-400/60'
+                ? 'bg-gradient-to-r from-amber-950/40 via-[#f6f6f3] to-[#f6f6f3] border-amber-500/50'
+                : 'bg-gradient-to-r from-cyan-950/40 via-[#f6f6f3] to-[#f6f6f3] border-cyan-400/60'
             }`}
           >
             <div className="flex items-center gap-3">
@@ -656,7 +656,7 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                       ? isAsc
                         ? 'border-amber-400 bg-amber-950/20 shadow-lg'
                         : 'border-cyan-400 bg-cyan-950/20 shadow-lg'
-                      : 'border-slate-800 bg-[#0b1120] hover:border-slate-700 shadow-md'
+                      : 'border-slate-800 bg-[#f6f6f3] hover:border-slate-700 shadow-md'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2.5 sm:gap-4">
@@ -698,7 +698,7 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
                         decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                      <div className="absolute inset-0 bg-white/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                         <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-slate-200" />
                       </div>
                     </div>
@@ -746,7 +746,7 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
           </div>
 
           {/* Sticky/Floating Bottom Submission Bar */}
-          <div className="sticky bottom-3 sm:bottom-4 z-30 p-3 sm:p-4 bg-[#0b1120]/95 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="sticky bottom-3 sm:bottom-4 z-30 p-3 sm:p-4 bg-[#f6f6f3]/95 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="text-xs text-slate-300">
               <span className="font-semibold text-slate-100 block">
                 Ready to submit {isAsc ? 'Oldest → Newest' : 'Newest → Oldest'} order?
@@ -762,8 +762,8 @@ export const DecadeSortPage: React.FC<DecadeSortPageProps> = ({
               onClick={handleSubmit}
               className={`py-3 px-6 sm:px-8 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all cursor-pointer disabled:opacity-50 text-slate-950 ${
                 isAsc
-                  ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 shadow-amber-950/40 hover:brightness-110'
-                  : 'bg-gradient-to-r from-cyan-400 via-sky-300 to-amber-300 shadow-cyan-950/40 hover:brightness-110'
+                  ? 'bg-stone-50 shadow-none hover:bg-stone-300'
+                  : 'bg-stone-50 shadow-none hover:bg-stone-300'
               }`}
             >
               {isSubmitting ? (

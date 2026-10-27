@@ -68,7 +68,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       }`}
     >
       {/* Primary Score Breakdown */}
-      <div className="bg-[#0b1120] border border-slate-800 rounded-3xl p-5 shadow-xl text-center space-y-3 relative overflow-hidden">
+      <div className="bg-[#f6f6f3] border border-slate-800 rounded-3xl p-5 shadow-xl text-center space-y-3 relative overflow-hidden">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span className="font-semibold text-amber-400 font-cinzel">Round {round_no} Summary</span>
           <span className="font-mono tabular-nums">Total: {total_score.toLocaleString()} pts</span>
@@ -152,7 +152,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       {hasLocation ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-stretch">
           {/* Photo */}
-          <div className="relative rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-md h-[240px] xs:h-[280px] sm:h-[320px]">
+          <div className="relative rounded-2xl overflow-hidden bg-[#f6f6f3] border border-slate-800 shadow-md h-[240px] xs:h-[280px] sm:h-[320px]">
             <img
               src={imageUrl}
               alt={caption || 'Archival photo result'}
@@ -166,7 +166,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
             <button
               type="button"
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-slate-200 hover:text-white text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
+              className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-white/85 backdrop-blur-sm text-slate-200 hover:text-stone-50 text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
             >
               <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
               <span>Enlarge</span>
@@ -186,7 +186,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
         </div>
       ) : (
         /* Photo when no location asked */
-        <div className="relative rounded-2xl overflow-hidden bg-[#0b1120] border border-slate-800 shadow-md aspect-[16/10] max-h-64">
+        <div className="relative rounded-2xl overflow-hidden bg-[#f6f6f3] border border-slate-800 shadow-md aspect-[16/10] max-h-64">
           <img
             src={imageUrl}
             alt={caption || 'Archival photo result'}
@@ -200,7 +200,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
           <button
             type="button"
             onClick={() => setIsLightboxOpen(true)}
-            className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-slate-200 hover:text-white text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
+            className="absolute bottom-2 right-2 px-2.5 py-1.5 rounded-lg bg-white/85 backdrop-blur-sm text-slate-200 hover:text-stone-50 text-xs flex items-center gap-1 cursor-pointer active:scale-95 transition-transform"
           >
             <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
             <span>Enlarge</span>
@@ -209,7 +209,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       )}
 
       {/* Year Timeline */}
-      <div className="bg-[#0b1120] border border-slate-800 rounded-2xl p-4 space-y-3">
+      <div className="bg-[#f6f6f3] border border-slate-800 rounded-2xl p-4 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <span className="font-semibold text-slate-200 flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-amber-400" />
@@ -283,7 +283,7 @@ export const RoundResultScreen: React.FC<RoundResultScreenProps> = ({
       </div>
 
       {/* Archival Context, Fun Fact & Credit */}
-      <div className="bg-[#0b1120]/90 border border-slate-800 rounded-2xl p-4 space-y-3">
+      <div className="bg-[#f6f6f3]/90 border border-slate-800 rounded-2xl p-4 space-y-3">
         {caption && (
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">

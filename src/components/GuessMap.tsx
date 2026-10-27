@@ -209,7 +209,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
 
   return (
     <div
-      className={`relative rounded-2xl overflow-hidden border border-slate-800 bg-[#0b1120] transition-all duration-200 shadow-xl group ${
+      className={`relative rounded-2xl overflow-hidden border border-slate-800 bg-[#f6f6f3] transition-all duration-200 shadow-xl group ${
         internalFullscreen && !onToggleExpand
           ? 'fixed inset-0 z-50 rounded-none w-screen h-[100dvh]'
           : className || 'w-full h-full'
@@ -219,7 +219,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
 
       {/* Top Left: Compact Region Navigation Chips Bar */}
       <div className="absolute top-2.5 left-2.5 right-2.5 z-10 pointer-events-auto flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
-        <div className="flex items-center gap-0.5 bg-[#090d16]/90 backdrop-blur-md border border-slate-800/90 p-1 rounded-xl shadow-lg shrink-0">
+        <div className="flex items-center gap-0.5 bg-[#f6f6f3]/90 backdrop-blur-md border border-slate-800/90 p-1 rounded-xl shadow-lg shrink-0">
           <Compass className="w-3.5 h-3.5 text-cyan-400 ml-1 mr-0.5 shrink-0" />
           <div className="flex items-center gap-0.5 px-0.5">
             {REGIONS.map((r) => (
@@ -243,7 +243,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
       {/* Bottom Left: Coordinates HUD & Status */}
       <div className="absolute bottom-2.5 left-2.5 z-10 pointer-events-auto max-w-[calc(100%-140px)]">
         {lat !== null && lng !== null ? (
-          <div className="bg-[#090d16]/95 backdrop-blur-md border border-slate-800 px-2.5 py-1.5 rounded-xl shadow-xl flex items-center gap-1.5 text-xs animate-fade-in">
+          <div className="bg-[#f6f6f3]/95 backdrop-blur-md border border-slate-800 px-2.5 py-1.5 rounded-xl shadow-xl flex items-center gap-1.5 text-xs animate-fade-in">
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             <span className="font-mono text-slate-200 text-[10px] xs:text-[11px] font-semibold truncate">
               {formatCoord(lat, true)}, {formatCoord(lng, false)}
@@ -251,7 +251,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
             <span className="text-[10px] text-slate-400 hidden sm:inline">· Drag pin to adjust</span>
           </div>
         ) : (
-          <div className="bg-[#090d16]/90 backdrop-blur-md border border-slate-800/90 px-2.5 py-1.5 rounded-xl shadow-md flex items-center gap-1.5 text-[10px] xs:text-[11px] text-slate-300">
+          <div className="bg-[#f6f6f3]/90 backdrop-blur-md border border-slate-800/90 px-2.5 py-1.5 rounded-xl shadow-md flex items-center gap-1.5 text-[10px] xs:text-[11px] text-slate-300">
             <MapPin className="w-3 h-3 text-cyan-400 shrink-0" />
             <span className="truncate">Tap map to pin location</span>
           </div>
@@ -261,13 +261,13 @@ export const GuessMap: React.FC<GuessMapProps> = ({
       {/* Bottom Right: Thumb-Reachable Action Controls (+, -, Reset, Expand) */}
       <div className="absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1.5 pointer-events-auto">
         {/* Zoom In/Out Buttons (Thumb accessible 40px) */}
-        <div className="flex items-center bg-[#090d16]/95 backdrop-blur-md border border-slate-700/80 rounded-xl overflow-hidden shadow-lg">
+        <div className="flex items-center bg-[#f6f6f3]/95 backdrop-blur-md border border-slate-700/80 rounded-xl overflow-hidden shadow-lg">
           <button
             type="button"
             onClick={handleZoomIn}
             aria-label="Zoom in"
             title="Zoom In"
-            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800 transition-colors border-r border-slate-750 cursor-pointer active:scale-90"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-200 hover:text-stone-50 hover:bg-slate-800 transition-colors border-r border-slate-750 cursor-pointer active:scale-90"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -276,7 +276,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
             onClick={handleZoomOut}
             aria-label="Zoom out"
             title="Zoom Out"
-            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer active:scale-90"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-200 hover:text-stone-50 hover:bg-slate-800 transition-colors cursor-pointer active:scale-90"
           >
             <Minus className="w-4 h-4" />
           </button>
@@ -288,7 +288,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
             onClick={handleResetPin}
             title="Reset View to World"
             aria-label="Reset Map View"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#090d16]/95 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white shadow-lg transition-colors flex items-center justify-center cursor-pointer active:scale-90"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#f6f6f3]/95 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-stone-50 shadow-lg transition-colors flex items-center justify-center cursor-pointer active:scale-90"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -299,7 +299,7 @@ export const GuessMap: React.FC<GuessMapProps> = ({
           onClick={handleToggleExpand}
           title={isExpanded ? 'Compact Map' : 'Expand Map'}
           aria-label={isExpanded ? 'Compact Map' : 'Expand Map'}
-          className={`h-9 sm:h-10 px-2.5 rounded-xl bg-[#090d16]/95 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-cyan-400 shadow-lg transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+          className={`h-9 sm:h-10 px-2.5 rounded-xl bg-[#f6f6f3]/95 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-cyan-400 shadow-lg transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
             isExpanded ? 'ring-2 ring-cyan-400 text-cyan-300' : ''
           }`}
         >

@@ -139,7 +139,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
         [actualLat, actualLng],
       ],
       {
-        color: '#f59e0b',
+        color: '#b5841e',
         weight: 3.5,
         opacity: 0.9,
         dashArray: '8, 8',
@@ -174,7 +174,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
 
   return (
     <div
-      className={`relative rounded-3xl overflow-hidden border border-stone-800 bg-[#12100e] transition-all shadow-xl ${
+      className={`relative rounded-3xl overflow-hidden border border-stone-800 bg-[#f6f6f3] transition-all shadow-xl ${
         isFullscreen
           ? 'fixed inset-0 z-50 rounded-none w-screen h-screen'
           : 'w-full h-[320px] sm:h-[360px] md:h-full min-h-[300px]'
@@ -184,7 +184,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
 
       {/* Top Left: Legend and Distance badge */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-auto">
-        <div className="bg-[#0c0a09]/95 backdrop-blur-md border border-stone-800 px-3 py-2 rounded-xl text-xs shadow-xl space-y-1.5">
+        <div className="bg-[#f6f6f3]/95 backdrop-blur-md border border-stone-800 px-3 py-2 rounded-xl text-xs shadow-xl space-y-1.5">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block shadow-sm" />
@@ -211,7 +211,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
           onClick={handleRefocus}
           title="Refit Markers"
           aria-label="Refit markers in view"
-          className="p-2.5 rounded-xl bg-[#0c0a09]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-white shadow-lg transition-colors cursor-pointer active:scale-95"
+          className="p-2.5 rounded-xl bg-[#f6f6f3]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-stone-50 shadow-lg transition-colors cursor-pointer active:scale-95"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -221,7 +221,7 @@ export const ResultMap: React.FC<ResultMapProps> = ({
           onClick={() => setIsFullscreen(!isFullscreen)}
           title={isFullscreen ? 'Exit Fullscreen' : 'Enlarge Map'}
           aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enlarge Map'}
-          className="p-2.5 rounded-xl bg-[#0c0a09]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-amber-400 shadow-lg transition-colors flex items-center gap-1 text-xs cursor-pointer active:scale-95"
+          className="p-2.5 rounded-xl bg-[#f6f6f3]/90 hover:bg-stone-800 border border-stone-700/80 text-stone-300 hover:text-amber-400 shadow-lg transition-colors flex items-center gap-1 text-xs cursor-pointer active:scale-95"
         >
           {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           <span className="text-[11px] font-medium hidden xs:inline">
