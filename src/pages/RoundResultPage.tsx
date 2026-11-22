@@ -14,10 +14,8 @@ import {
 import { useGame } from '../context/GameContext.tsx';
 import { ResultMap } from '../components/ResultMap.tsx';
 import { PhotoLightbox } from '../components/PhotoLightbox.tsx';
-import { getLocalAdFreeStatus } from '../lib/monetization.ts';
 
 interface RoundResultPageProps {
-  onOpenRemoveAds?: () => void;
 }
 
 const WEEKDAY_NAMES = [
@@ -30,7 +28,7 @@ const WEEKDAY_NAMES = [
   'Saturday',
 ];
 
-export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAds }) => {
+export const RoundResultPage: React.FC<RoundResultPageProps> = () => {
   const { gameId, n } = useParams<{ gameId: string; n: string }>();
   const navigate = useNavigate();
   const roundNo = parseInt(n || '1', 10);
@@ -47,7 +45,6 @@ export const RoundResultPage: React.FC<RoundResultPageProps> = ({ onOpenRemoveAd
   const [isInitializing, setIsInitializing] = useState(true);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const isAdFree = getLocalAdFreeStatus();
 
   // 1. Ensure game data is loaded
   useEffect(() => {

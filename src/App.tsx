@@ -5,7 +5,6 @@ import { supabase } from './lib/supabase.ts';
 import { GameProvider, useGame } from './context/GameContext.tsx';
 import { Header } from './components/Header.tsx';
 import { ProfileModal } from './components/ProfileModal.tsx';
-import { RemoveAdsModal } from './components/RemoveAdsModal.tsx';
 import { SaveProgressModal, AuthModalMode } from './components/SaveProgressModal.tsx';
 import { ScrollToTop } from './components/ScrollToTop.tsx';
 import { HomePage } from './pages/HomePage.tsx';
@@ -14,10 +13,7 @@ import { RoundResultPage } from './pages/RoundResultPage.tsx';
 import { FinalResultsPage } from './pages/FinalResultsPage.tsx';
 import { LeaderboardPage } from './pages/LeaderboardPage.tsx';
 import { DecadeSortPage } from './pages/DecadeSortPage.tsx';
-import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage.tsx';
-import { CheckoutCancelPage } from './pages/CheckoutCancelPage.tsx';
 import { AdminPage } from './pages/AdminPage.tsx';
-import { getLocalAdFreeStatus, setLocalAdFreeStatus } from './lib/monetization.ts';
 import { setUserCountry } from './lib/countryFlags.ts';
 
 function AppLayout() {
@@ -30,7 +26,6 @@ function AppLayout() {
   const [displayName, setDisplayName] = useState<string>('Player');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isRemoveAdsOpen, setIsRemoveAdsOpen] = useState(false);
   // Pop up "How do you want to play?" immediately when the game loads, overlaying the menu until one is completed
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -40,7 +35,6 @@ function AppLayout() {
   const [authModalMode, setAuthModalMode] = useState<AuthModalMode>('choice');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [, setIsAdFreeState] = useState(getLocalAdFreeStatus);
 
   const showSuccessToast = useCallback((msg: string) => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -48,17 +42,6 @@ function AppLayout() {
     toastTimeoutRef.current = setTimeout(() => {
       setToastMessage(null);
     }, 4500);
-  }, []);
-
-  // Sync ad free status listener across tabs/components
-  useEffect(() => {
-    const handleAdFreeChange = () => {
-      setIsAdFreeState(getLocalAdFreeStatus());
-    };
-    window.addEventListener('timeguess_ad_free_changed', handleAdFreeChange);
-    return () => {
-      window.removeEventListener('timeguess_ad_free_changed', handleAdFreeChange);
-    };
   }, []);
 
   // Determine current screen & playing status from URL
@@ -79,14 +62,13 @@ function AppLayout() {
   else if (pathname.includes('/final')) currentScreen = 'final_results';
   else if (pathname.includes('/decade-sort')) currentScreen = 'decade_sort';
   else if (pathname.includes('/leaderboard')) currentScreen = 'leaderboard';
-  else if (pathname.includes('/checkout/') || pathname.includes('/premium/')) currentScreen = 'checkout';
 
   // Synchronize user profile & session
   const syncUserProfile = useCallback(async (uid: string, initialName?: string) => {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('display_name, country_code, is_ads_removed, is_ad_free')
+        .select('display_name, country_code')
         .eq('id', uid)
         .maybeSingle();
 
@@ -103,11 +85,6 @@ function AppLayout() {
 
       if (profile?.country_code !== undefined) {
         setUserCountry(profile?.country_code || null);
-      }
-
-      if (profile?.is_ads_removed || profile?.is_ad_free) {
-        setLocalAdFreeStatus(true);
-        setIsAdFreeState(true);
       }
     } catch (err) {
       console.warn('Profile sync warning:', err);
@@ -184,16 +161,6 @@ function AppLayout() {
     };
   }, [syncUserProfile]);
 
-  // Remove-Ads purchasing is disabled for this deploy: it depends on the
-  // Express/Stripe backend in server.ts, which isn't running on a static
-  // host. Every "Remove Ads" entry point in the app funnels through this
-  // one callback, so redirecting it here (instead of opening the paid
-  // checkout modal) disables the whole flow without touching every
-  // component that renders a Remove Ads button/banner.
-  const handleOpenRemoveAds = useCallback(() => {
-    showSuccessToast('Ad-free removal is coming soon — thanks for your patience!');
-  }, [showSuccessToast]);
-
   const handleOpenAuthModal = useCallback((mode: AuthModalMode = 'choice') => {
     setAuthModalMode(mode);
     setIsAuthModalOpen(true);
@@ -255,7 +222,6 @@ function AppLayout() {
         onOpenProfile={() => setIsProfileOpen(true)}
         onGoHome={() => navigate('/')}
         onOpenLeaderboard={() => navigate('/leaderboard')}
-        onOpenRemoveAds={handleOpenRemoveAds}
         onOpenSaveProgress={() => handleOpenAuthModal('choice')}
       />
 
@@ -266,7 +232,6 @@ function AppLayout() {
             path="/"
             element={
               <HomePage
-                onOpenRemoveAds={handleOpenRemoveAds}
                 isAnonymous={isAnonymous}
                 onOpenSaveProgress={() => handleOpenAuthModal('choice')}
                 onOpenLogin={() => handleOpenAuthModal('login')}
@@ -274,12 +239,11 @@ function AppLayout() {
             }
           />
           <Route path="/play/:gameId/round/:n" element={<RoundGuessPage />} />
-          <Route path="/play/:gameId/result/:n" element={<RoundResultPage onOpenRemoveAds={handleOpenRemoveAds} />} />
+          <Route path="/play/:gameId/result/:n" element={<RoundResultPage />} />
           <Route
             path="/play/:gameId/final"
             element={
               <FinalResultsPage
-                onOpenRemoveAds={handleOpenRemoveAds}
                 isAnonymous={isAnonymous}
                 onOpenSaveProgress={() => handleOpenAuthModal('choice')}
               />
@@ -289,7 +253,6 @@ function AppLayout() {
             path="/decade-sort"
             element={
               <DecadeSortPage
-                onOpenRemoveAds={handleOpenRemoveAds}
                 isAnonymous={isAnonymous}
                 onOpenSaveProgress={() => handleOpenAuthModal('choice')}
                 onOpenLogin={() => handleOpenAuthModal('login')}
@@ -302,15 +265,9 @@ function AppLayout() {
               <LeaderboardPage
                 currentUserId={userId}
                 currentDisplayName={displayName}
-                onOpenRemoveAds={handleOpenRemoveAds}
               />
             }
           />
-          {/* Support both /premium/* and /checkout/* routes */}
-          <Route path="/premium/success" element={<CheckoutSuccessPage />} />
-          <Route path="/premium/cancelled" element={<CheckoutCancelPage />} />
-          <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-          <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
@@ -324,7 +281,6 @@ function AppLayout() {
         currentDisplayName={displayName}
         userEmail={userEmail}
         onDisplayNameUpdated={(newName) => setDisplayName(newName)}
-        onOpenRemoveAds={handleOpenRemoveAds}
         onOpenAuthModal={(mode) => handleOpenAuthModal(mode)}
         onSignOut={handleSignOut}
       />
@@ -347,16 +303,6 @@ function AppLayout() {
         onShowSuccessToast={showSuccessToast}
       />
 
-      {/* Remove Ads Upgrade Modal */}
-      <RemoveAdsModal
-        isOpen={isRemoveAdsOpen}
-        onClose={() => setIsRemoveAdsOpen(false)}
-        userId={userId}
-        onAdFreeUnlocked={() => {
-          setLocalAdFreeStatus(true);
-          setIsAdFreeState(true);
-        }}
-      />
     </div>
   );
 }

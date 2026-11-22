@@ -3,9 +3,6 @@ import {
   X,
   User,
   Check,
-  Zap,
-  Crown,
-  RefreshCw,
   AlertCircle,
   Flame,
   ShieldCheck,
@@ -15,12 +12,6 @@ import {
   Camera,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase.ts';
-import {
-  AD_FREE_PASS_ENABLED,
-  getLocalAdFreeStatus,
-  restorePurchases,
-  getAdFreePurchaseDate,
-} from '../lib/monetization.ts';
 import {
   getUserCountryCode,
   setUserCountry,
@@ -41,7 +32,6 @@ interface ProfileModalProps {
   isAnonymous: boolean;
   currentDisplayName: string;
   onDisplayNameUpdated: (newName: string) => void;
-  onOpenRemoveAds: () => void;
   onOpenAuthModal?: (mode: 'choice' | 'save_progress' | 'signup' | 'login') => void;
   userEmail?: string | null;
   onSignOut?: () => void;
@@ -54,7 +44,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   isAnonymous,
   currentDisplayName,
   onDisplayNameUpdated,
-  onOpenRemoveAds,
   onOpenAuthModal,
   userEmail,
   onSignOut,
@@ -64,8 +53,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [restoring, setRestoring] = useState(false);
-  const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
 
   const [streakData, setStreakData] = useState<StreakData>(getStreakData);
   const [isCompletedToday, setIsCompletedToday] = useState(isDailyCompletedToday);
@@ -117,9 +104,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  const isAdFree = getLocalAdFreeStatus();
-  const purchaseDate = getAdFreePurchaseDate();
 
   if (!isOpen) return null;
 
@@ -182,14 +166,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleRestorePurchases = async () => {
-    setRestoring(true);
-    setRestoreMsg(null);
-    const res = await restorePurchases(userId);
-    setRestoring(false);
-    setRestoreMsg(res.message);
   };
 
   return (
@@ -279,62 +255,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             )}
           </span>
         </div>
-
-        {/* Ad-Free Status Block: shown once there are ads to remove, or to an existing supporter */}
-        {(AD_FREE_PASS_ENABLED || isAdFree) && (
-        <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-stone-400 font-medium">Supporter Status</span>
-            {isAdFree ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">
-                <Crown className="w-3 h-3 fill-amber-400" />
-                Supporter Active
-              </span>
-            ) : (
-              <span className="text-[11px] font-semibold text-stone-400 bg-stone-900 px-2.5 py-0.5 rounded-full border border-stone-800 font-mono">
-                Free Mode
-              </span>
-            )}
-          </div>
-
-          {isAdFree ? (
-            <p className="text-[11px] text-stone-400 leading-relaxed">
-              Ads are removed. {purchaseDate ? `Active since: ${purchaseDate}` : ''}
-            </p>
-          ) : (
-            <div className="pt-1.5 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onOpenRemoveAds();
-                }}
-                className="flex-1 py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Zap className="w-3.5 h-3.5 fill-stone-950" />
-                <span>Remove Ads ($2.99)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleRestorePurchases}
-                disabled={restoring}
-                className="py-2 px-2.5 rounded-xl bg-stone-900 hover:bg-stone-850 text-stone-300 text-xs transition-colors flex items-center gap-1 cursor-pointer"
-                title="Restore previous purchase"
-              >
-                <RefreshCw className={`w-3 h-3 ${restoring ? 'animate-spin text-amber-400' : ''}`} />
-                <span>Restore</span>
-              </button>
-            </div>
-          )}
-
-          {restoreMsg && (
-            <p className="text-[11px] text-amber-300 bg-amber-950/40 p-2 rounded-lg border border-amber-900/50">
-              {restoreMsg}
-            </p>
-          )}
-        </div>
-        )}
 
         {/* Display name & Country form */}
         <form onSubmit={handleSave} className="space-y-4">

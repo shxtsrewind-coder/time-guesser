@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Share2, RotateCcw, Award, Check, Users, MapPin, Calendar, Clock, Flame, Sparkles, ShieldCheck, Play, ArrowUpDown, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { FinishGameResponse, GameMode } from '../types.ts';
-import { getLocalAdFreeStatus } from '../lib/monetization.ts';
 import { getStreakData, recordDailyCompletion, getTimeUntilNextDaily, StreakData } from '../lib/streak.ts';
 
 interface FinalResultsScreenProps {
@@ -9,7 +8,6 @@ interface FinalResultsScreenProps {
   finishData: FinishGameResponse;
   onPlayAgain: () => void;
   onOpenLeaderboard: () => void;
-  onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
   previousScore?: number | null;
@@ -20,13 +18,11 @@ export const FinalResultsScreen: React.FC<FinalResultsScreenProps> = ({
   finishData,
   onPlayAgain,
   onOpenLeaderboard,
-  onOpenRemoveAds,
   isAnonymous,
   onOpenSaveProgress,
   previousScore,
 }) => {
   const [copied, setCopied] = useState(false);
-  const isAdFree = getLocalAdFreeStatus();
   const [streakData, setStreakData] = useState<StreakData>(() => {
     if (mode === 'daily') {
       return getStreakData();

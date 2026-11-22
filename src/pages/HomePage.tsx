@@ -6,14 +6,12 @@ import { GameMode } from '../types.ts';
 import { isDailyCompletedToday } from '../lib/streak.ts';
 
 interface HomePageProps {
-  onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
   onOpenLogin?: () => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
-  onOpenRemoveAds,
   isAnonymous,
   onOpenSaveProgress,
   onOpenLogin,
@@ -53,7 +51,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         onStartGame={handleStartGame}
         onOpenDecadeSort={() => navigate('/decade-sort')}
         onOpenLeaderboard={() => navigate('/leaderboard')}
-        onOpenRemoveAds={onOpenRemoveAds}
         isAnonymous={isAnonymous}
         onOpenSaveProgress={onOpenSaveProgress}
         onOpenLogin={onOpenLogin}

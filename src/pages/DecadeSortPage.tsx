@@ -26,7 +26,6 @@ import { DecadeSortPhoto, DecadeSortSubmitResponse, DecadeSortCorrectPhoto } fro
 import { PhotoLightbox } from '../components/PhotoLightbox.tsx';
 
 interface DecadeSortPageProps {
-  onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
   onOpenLogin?: () => void;

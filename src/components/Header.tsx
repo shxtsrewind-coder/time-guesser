@@ -14,7 +14,6 @@ interface HeaderProps {
   onOpenProfile: () => void;
   onGoHome: () => void;
   onOpenLeaderboard: () => void;
-  onOpenRemoveAds?: () => void;
   onOpenSaveProgress?: () => void;
   isPlaying?: boolean;
 }

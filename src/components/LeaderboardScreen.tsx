@@ -15,14 +15,12 @@ import {
 } from 'lucide-react';
 import { supabase, parseSupabaseError } from '../lib/supabase.ts';
 import { DailyLeaderboardRow, AllTimeLeaderboardRow, DecadeSortLeaderboardRow } from '../types.ts';
-import { AD_FREE_PASS_ENABLED, getLocalAdFreeStatus } from '../lib/monetization.ts';
 import { getUserCountryCode, codeToFlagEmoji } from '../lib/countryFlags.ts';
 
 interface LeaderboardScreenProps {
   onBack: () => void;
   currentUserId?: string | null;
   currentDisplayName?: string;
-  onOpenRemoveAds?: () => void;
   initialTab?: 'daily' | 'alltime' | 'decade_sort';
 }
 
@@ -38,7 +36,6 @@ interface RankedEntry {
 export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   onBack,
   currentDisplayName,
-  onOpenRemoveAds,
   initialTab = 'daily',
 }) => {
   const [activeTab, setActiveTab] = useState<'daily' | 'alltime' | 'decade_sort'>(initialTab);
@@ -49,7 +46,6 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [userCountryCode, setUserCountryCodeState] = useState<string | null>(getUserCountryCode);
-  const isAdFree = getLocalAdFreeStatus();
 
   // Listen for country changes
   useEffect(() => {
@@ -200,17 +196,6 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         </button>
 
         <div className="flex items-center gap-2.5">
-          {AD_FREE_PASS_ENABLED && !isAdFree && onOpenRemoveAds && (
-            <button
-              type="button"
-              onClick={onOpenRemoveAds}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-colors cursor-pointer"
-            >
-              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-              <span>Remove Ads</span>
-            </button>
-          )}
-
           <button
             type="button"
             onClick={fetchLeaderboards}

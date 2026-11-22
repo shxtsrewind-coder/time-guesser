@@ -22,7 +22,6 @@ interface HomeScreenProps {
   onStartGame: (mode: GameMode) => void;
   onOpenDecadeSort: () => void;
   onOpenLeaderboard: () => void;
-  onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
   onOpenLogin?: () => void;

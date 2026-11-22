@@ -6,13 +6,11 @@ import { useGame } from '../context/GameContext.tsx';
 interface LeaderboardPageProps {
   currentUserId?: string | null;
   currentDisplayName?: string;
-  onOpenRemoveAds?: () => void;
 }
 
 export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({
   currentUserId,
   currentDisplayName,
-  onOpenRemoveAds,
 }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -26,7 +24,6 @@ export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({
         onBack={() => navigate('/')}
         currentUserId={currentUserId}
         currentDisplayName={currentDisplayName}
-        onOpenRemoveAds={onOpenRemoveAds}
         initialTab={initialTab}
       />
     </div>

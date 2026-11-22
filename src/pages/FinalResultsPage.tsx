@@ -5,13 +5,11 @@ import { supabase } from '../lib/supabase.ts';
 import { FinalResultsScreen } from '../components/FinalResultsScreen.tsx';
 
 interface FinalResultsPageProps {
-  onOpenRemoveAds?: () => void;
   isAnonymous?: boolean;
   onOpenSaveProgress?: () => void;
 }
 
 export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
-  onOpenRemoveAds,
   isAnonymous,
   onOpenSaveProgress,
 }) => {
@@ -132,7 +130,6 @@ export const FinalResultsPage: React.FC<FinalResultsPageProps> = ({
         finishData={effectiveFinishData}
         onPlayAgain={handlePlayAgain}
         onOpenLeaderboard={handleOpenLeaderboard}
-        onOpenRemoveAds={onOpenRemoveAds}
         isAnonymous={isAnonymous}
         onOpenSaveProgress={onOpenSaveProgress}
         previousScore={previousScore}
